@@ -1,0 +1,331 @@
+---
+/**
+ * The idea in one picture, drawn in HTML: a shop asks to use the visitor's
+ * AI, Leuria asks the visitor, and the answer comes from their own AI.
+ * Decorative: the page says the same in words.
+ */
+import Icon from "./Icon.astro";
+import Logo from "./Logo.astro";
+---
+
+<div class="scene" aria-hidden="true" data-scene>
+	<div class="browser card">
+		<div class="chrome">
+			<span class="dots"><i></i><i></i><i></i></span>
+			<span class="address"><Icon name="lock" size={12} />kiln.example</span>
+		</div>
+		<div class="shop">
+			<div class="shop-head">
+				<span class="shop-name">Kiln &amp; Co.</span>
+				<span class="shop-nav"><span>Mugs</span><span>Bowls</span><span>Glazes</span></span>
+			</div>
+			<div class="ask">
+				<p class="ask-title">Ask the shop</p>
+				<p class="bubble bubble-me">A mug that keeps tea warm, under €30?</p>
+				<p class="bubble bubble-ai">
+					<span class="by"><span class="dot"></span>Your AI · ChatGPT</span>
+					The Tenmoku mug, €26. Its double stoneware wall holds the heat, and the glaze breaks rust red on the rim.
+				</p>
+				<span class="connect">
+					<Logo size={16} wordmark={false} />
+					<span>Connect your AI</span>
+					<span class="connect-by">by leuria</span>
+				</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="approval card">
+		<div class="approval-head">
+			<Logo size={22} wordmark={false} />
+			<span class="site"><Icon name="globe" size={13} />kiln.example</span>
+		</div>
+		<p class="approval-title">kiln.example wants to use your AI</p>
+		<div class="lists">
+			<div>
+				<p class="list-title">It can</p>
+				<p class="item can"><Icon name="check" size={14} />Talk to your AI</p>
+				<p class="item can"><Icon name="check" size={14} />Search its own products</p>
+			</div>
+			<div>
+				<p class="list-title">It can't</p>
+				<p class="item cant"><Icon name="x" size={14} />See your files</p>
+				<p class="item cant"><Icon name="x" size={14} />Run anything on your computer</p>
+			</div>
+		</div>
+		<div class="approval-actions">
+			<span class="fake-btn quiet">Don't allow</span>
+			<span class="fake-btn ink">Allow</span>
+		</div>
+	</div>
+</div>
+
+<script>
+	// The scene tells its story when the reader gets to it, not while it's still below the fold.
+	const scenes = document.querySelectorAll<HTMLElement>("[data-scene]");
+	const player = new IntersectionObserver(
+		(entries) => {
+			for (const entry of entries) {
+				if (!entry.isIntersecting) continue;
+				entry.target.classList.add("is-playing");
+				player.unobserve(entry.target);
+			}
+		},
+		{ threshold: 0.35 },
+	);
+	for (const scene of scenes) player.observe(scene);
+</script>
+
+<style>
+	.scene:not(.is-playing),
+	.scene:not(.is-playing) * {
+		animation-play-state: paused !important;
+	}
+	.scene {
+		position: relative;
+		display: grid;
+		max-width: 620px;
+		margin: 0 auto;
+		font-size: 14px;
+		line-height: 20px;
+		user-select: none;
+	}
+
+	/* The website */
+	.browser {
+		overflow: hidden;
+		border-radius: var(--radius-5);
+		box-shadow:
+			var(--shadow-5),
+			0 0 0 1px var(--border);
+		animation: rise 600ms var(--easing-standard) both;
+	}
+	.chrome {
+		display: flex;
+		align-items: center;
+		gap: var(--space-4);
+		padding: var(--space-3) var(--space-4);
+		background: var(--surface-sunken);
+		border-bottom: 1px solid var(--border);
+	}
+	.dots {
+		display: flex;
+		gap: 6px;
+	}
+	.dots i {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: var(--pearl-6);
+	}
+	.address {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 2px var(--space-3);
+		border-radius: var(--radius-full);
+		background: var(--surface);
+		color: var(--text-muted);
+		font-size: 12px;
+		box-shadow: inset 0 0 0 1px var(--border);
+	}
+	.shop {
+		display: grid;
+		gap: var(--space-4);
+		padding: var(--space-5);
+	}
+	.shop-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--space-3);
+	}
+	.shop-name {
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 20px;
+		font-style: italic;
+		letter-spacing: -0.01em;
+	}
+	.shop-nav {
+		display: flex;
+		gap: var(--space-3);
+		color: var(--text-muted);
+		font-size: 12px;
+	}
+	.ask {
+		display: grid;
+		gap: var(--space-2);
+		padding: var(--space-4);
+		border-radius: var(--radius-4);
+		background: var(--surface-sunken);
+		box-shadow: inset 0 0 0 1px var(--border);
+	}
+	.ask-title {
+		font-weight: 700;
+	}
+	.bubble {
+		max-width: 80%;
+		padding: var(--space-2) var(--space-3);
+		border-radius: var(--radius-3);
+	}
+	.bubble-me {
+		justify-self: end;
+		background: var(--ink);
+		color: var(--on-ink);
+		border-bottom-right-radius: var(--radius-1);
+	}
+	.bubble-ai {
+		display: grid;
+		gap: 2px;
+		background: var(--surface);
+		box-shadow: inset 0 0 0 1px var(--border);
+		border-bottom-left-radius: var(--radius-1);
+		animation: rise 500ms var(--easing-standard) 2100ms both;
+	}
+	.by {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--live-text);
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--live);
+	}
+	.connect {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		justify-self: start;
+		padding: 6px var(--space-4) 6px var(--space-3);
+		border-radius: var(--radius-full);
+		background: var(--surface);
+		font-weight: 600;
+		box-shadow:
+			var(--shadow-1),
+			inset 0 0 0 1px var(--border-strong);
+		animation: pressed 900ms var(--easing-standard) 700ms both;
+	}
+	.connect-by {
+		color: var(--text-muted);
+		font-weight: 500;
+		font-size: 12px;
+	}
+	@keyframes pressed {
+		40% {
+			transform: scale(0.96);
+			box-shadow:
+				0 0 0 4px var(--lavender-4),
+				inset 0 0 0 1px var(--accent);
+		}
+	}
+
+	/* Leuria's own window, over the site */
+	.approval {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		gap: var(--space-3);
+		width: min(330px, 92%);
+		margin: -48px 0 0 auto;
+		padding: var(--space-5);
+		border-radius: var(--radius-5);
+		box-shadow:
+			var(--shadow-5),
+			0 0 0 1px var(--border);
+		animation: arrive 700ms var(--easing-standard) 1100ms both;
+	}
+	@media (min-width: 900px) {
+		.scene {
+			margin-bottom: 168px;
+		}
+		.approval {
+			position: absolute;
+			right: var(--approval-right, -56px);
+			bottom: -168px;
+			margin: 0;
+		}
+		/* Clear of the window that comes over it. */
+		.bubble-ai {
+			max-width: 56%;
+		}
+	}
+	@keyframes arrive {
+		from {
+			opacity: 0;
+			transform: translateY(24px) scale(0.96);
+		}
+	}
+	.approval-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.site {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 2px var(--space-2);
+		border-radius: var(--radius-full);
+		background: var(--accent-soft);
+		color: var(--accent-text);
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.approval-title {
+		font-size: 18px;
+		line-height: 24px;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+	}
+	.lists {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-3);
+	}
+	.list-title {
+		margin-bottom: 4px;
+		color: var(--text-muted);
+		font-size: 12px;
+		font-weight: 700;
+	}
+	.item {
+		display: flex;
+		gap: 6px;
+		align-items: flex-start;
+		font-size: 13px;
+		line-height: 18px;
+	}
+	.item :global(.icon) {
+		margin-top: 2px;
+	}
+	.can :global(.icon) {
+		color: var(--live);
+	}
+	.cant :global(.icon) {
+		color: var(--blocked);
+	}
+	.approval-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: var(--space-2);
+		margin-top: var(--space-1);
+	}
+	.fake-btn {
+		padding: 6px var(--space-4);
+		border-radius: var(--radius-full);
+		font-weight: 600;
+	}
+	.fake-btn.quiet {
+		box-shadow: inset 0 0 0 1px var(--border-strong);
+	}
+	.fake-btn.ink {
+		background: var(--ink);
+		color: var(--on-ink);
+		animation: pressed 700ms var(--easing-standard) 1800ms both;
+	}
+</style>

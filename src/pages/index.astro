@@ -1,0 +1,865 @@
+---
+import DownloadButton from "../components/DownloadButton.astro";
+import HeroScene from "../components/HeroScene.astro";
+import Icon from "../components/Icon.astro";
+import Ocean from "../components/Ocean.astro";
+import TryIt from "../components/TryIt.astro";
+import Base from "../layouts/Base.astro";
+
+const uses = [
+	{ title: "Ask a shop", text: "Describe what you want in your own words. Your AI searches the shop's products and explains its pick." },
+	{ title: "Ask the docs", text: "Get the answer from a product's documentation, with links to the pages it used." },
+	{ title: "Search by meaning", text: "Find the note or the recipe you mean, even when you forgot the words it used." },
+];
+
+const gains = [
+	{
+		title: "Choose your AI",
+		text: "ChatGPT, Claude, Mistral, your company's AI or a model on your computer. The site doesn't pick for you, and you can switch any time.",
+	},
+	{
+		title: "Keep your data",
+		text: "Sites never see your files, your password or your AI account. Leuria keeps nothing of your conversations. With a model on your computer, nothing leaves it.",
+	},
+	{
+		title: "Stay sovereign",
+		text: "Pick a European AI, your company's own, or one that runs only on your computer. Leuria is open source, so anyone can check what it does.",
+	},
+	{
+		title: "Nothing without your yes",
+		text: "Every site asks first and shows what it can and can't do. You can disconnect it in one click.",
+	},
+	{
+		title: "Better answers",
+		text: "Sites often run a small model to keep their costs down. With Leuria, the answer comes from the AI you chose, the one you already trust.",
+	},
+];
+
+/** What a visitor sends to a site they'd like to see add Leuria. */
+const pitch =
+	"Hi! I'd love to use my own AI on your site. With Leuria, you can add AI features that run on your visitors' own AI, so you don't pay for it. It's free and open source: https://leuria.eu/websites";
+
+const ais = [
+	{ icon: "globe", title: "An AI app you use", text: "ChatGPT, Claude, Gemini… Sign in with the account you already have." },
+	{ icon: "computer", title: "A model on your computer", text: "With LM Studio or Ollama. Private and free: nothing leaves your computer." },
+	{ icon: "key", title: "An AI service with a key", text: "OpenAI, Mistral, your company's AI… Add its address and your key." },
+] as const;
+---
+
+<Base
+	title="Leuria · Use the AI you already have, on the websites you choose"
+	description="Leuria connects your own AI (ChatGPT, Claude, or a model on your computer) to the websites you choose. They ask first, and they never see your files."
+	headerDownload={false}
+	immersive
+>
+	<Ocean />
+
+	<section class="zone intro" data-theme="light">
+		<div class="caustics"></div>
+		<div class="container hero">
+			<p class="kicker reveal">Leuria · for the websites you use</p>
+			<h1 class="giant reveal" style="animation-delay: 80ms">
+				<span class="line" data-float="light">Bring</span>
+				<span class="line" data-float="light">your own</span>
+				<span class="line" data-float="light"><em>AI</em><span class="punct">.</span></span>
+			</h1>
+			<div class="hero-foot reveal" style="animation-delay: 200ms">
+				<div class="hero-copy">
+					<p class="hero-lead">
+						Get AI help on the websites you use, from the AI you choose: ChatGPT, Claude, Mistral or a model on your computer.
+					</p>
+					<ul class="hero-gains">
+						{
+							gains.map((gain) => (
+								<li>
+									<Icon name="check" size={16} />
+									{gain.title}
+								</li>
+							))
+						}
+					</ul>
+				</div>
+				<div class="hero-actions">
+					<DownloadButton />
+					<a class="btn btn-link" href="#uses">See what it does <span class="down" aria-hidden="true">↓</span></a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="zone uses-zone" id="uses" data-theme="light">
+		<div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+		<div class="container gains-wrap">
+			<p class="eyebrow gains-eyebrow">What you get</p>
+			<ul class="gains" data-float>
+				{
+					gains.map((gain) => (
+						<li class="gain">
+							<h3>{gain.title}</h3>
+							<p>{gain.text}</p>
+						</li>
+					))
+				}
+			</ul>
+			<header class="zone-head" data-float>
+				<p class="eyebrow">What it's for</p>
+				<h2 class="big">Your AI<span class="punct">,</span> where it helps<span class="punct">.</span></h2>
+				<p class="zone-lead">
+					More and more websites add AI. With Leuria, it runs on the AI you trust and already pay for, not on one the site picked for you.
+				</p>
+			</header>
+			<ol class="uses">
+				{
+					uses.map((use, i) => (
+						<li class="use" data-float>
+							<span class="use-n">0{i + 1}</span>
+							<h3 class="use-title">{use.title}</h3>
+							<p class="use-text">{use.text}</p>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+
+		<div class="container how" id="how">
+			<div class="how-copy" data-float>
+				<p class="eyebrow">How it works</p>
+				<h2 class="big">Set up once<span class="punct">.</span><br />Then just click<span class="punct">.</span></h2>
+				<ol class="steps">
+					<li><span class="step-n">1</span><div><h3>Download Leuria</h3><p>A small app. It waits in the background until a site needs it.</p></div></li>
+					<li><span class="step-n">2</span><div><h3>Choose your AI</h3><p>Leuria finds what you have. Pick one, sign in, and it checks that it works.</p></div></li>
+					<li><span class="step-n">3</span><div><h3>Click “Connect your AI”</h3><p>Leuria shows what the site can and can't do. You decide.</p></div></li>
+				</ol>
+			</div>
+			<div class="how-scene" data-float="heavy"><HeroScene /></div>
+		</div>
+
+		<div class="container ais">
+			<p class="ais-title">Works with the AI you have</p>
+			<ul class="ai-list">
+				{
+					ais.map((ai) => (
+						<li class="ai" data-float>
+							<Icon name={ai.icon} size={22} />
+							<h3>{ai.title}</h3>
+							<p>{ai.text}</p>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="zone privacy" id="privacy" data-theme="dark">
+		<div class="container">
+			<header class="zone-head" data-float>
+				<p class="eyebrow">Privacy</p>
+				<h2 class="giant-2">Every site<br />asks first<span class="punct">.</span></h2>
+				<p class="zone-lead">
+					A website can't use your AI until you say yes, in Leuria's own window. None of them get your keys, and you can disconnect any
+					of them in one click.
+				</p>
+			</header>
+
+			<div class="consent">
+				<div class="consent-col can" data-float>
+					<p class="consent-title"><span class="glow"></span>A site you connect can</p>
+					<ul>
+						<li>Send questions to your AI and show you the answers</li>
+						<li>Let your AI use tools from its own page, like searching its products</li>
+					</ul>
+				</div>
+				<div class="consent-col cant" data-float>
+					<p class="consent-title"><span class="glow"></span>It can't</p>
+					<ul>
+						<li>See your files or run anything on your computer</li>
+						<li>See your password or your AI account</li>
+						<li>Read what you asked on other sites</li>
+					</ul>
+				</div>
+			</div>
+
+			<dl class="facts">
+				<div data-float>
+					<dt>With a model on your computer</dt>
+					<dd>Your questions never leave your computer.</dd>
+				</div>
+				<div data-float>
+					<dt>With an AI app or service</dt>
+					<dd>Your questions go to that service, under your own account, as when you use it directly.</dd>
+				</div>
+				<div data-float>
+					<dt>Leuria itself</dt>
+					<dd>Keeps nothing of your conversations and sends no usage data. It remembers only the sites you connected.</dd>
+				</div>
+			</dl>
+		</div>
+	</section>
+
+	<section class="zone try-zone" data-theme="dark">
+		<div class="container try-grid">
+			<header class="zone-head" data-float>
+				<p class="eyebrow">Try it here</p>
+				<h2 class="big">This page runs<br />on your AI<span class="punct">.</span></h2>
+				<p class="zone-lead">Already have Leuria? Connect it, then ask anything about Leuria. Your AI reads this page to answer, and nothing else.</p>
+			</header>
+			<div data-float="heavy"><TryIt appearance="dark" /></div>
+		</div>
+	</section>
+
+	<section class="zone spread" id="share" data-theme="dark">
+		<div class="container spread-grid">
+			<header class="zone-head" data-float>
+				<p class="eyebrow">Spread the word</p>
+				<h2 class="big">Want it on a site you use<span class="punct">?</span><br />Tell them<span class="punct">.</span></h2>
+				<p class="zone-lead">
+					Every site that adds Leuria is one more place your AI works. Site owners listen to the people who use their site: a short
+					message from you counts.
+				</p>
+			</header>
+			<figure class="pitch card" data-float="heavy" data-pitch>
+				<figcaption>A message you can send them</figcaption>
+				<blockquote data-pitch-text>{pitch}</blockquote>
+				<div class="pitch-actions">
+					<button type="button" class="btn btn-ink" data-pitch-copy><Icon name="copy" size={16} /><span data-pitch-label>Copy the message</span></button>
+					<button type="button" class="btn btn-quiet" data-pitch-share hidden>Share…</button>
+				</div>
+			</figure>
+		</div>
+	</section>
+
+	<section class="zone closing" data-theme="dark">
+		<div class="container closing-inner">
+			<div class="pearl" aria-hidden="true"><span></span></div>
+			<h2 class="giant-2" data-float>Your AI<span class="punct">,</span><br />everywhere<span class="punct">.</span></h2>
+			<p class="zone-lead">Free and open source. On the websites you choose, and nowhere else.</p>
+			<div class="closing-actions">
+				<DownloadButton />
+				<a class="btn btn-link" href="/websites">Run a website? <Icon name="arrow-right" /></a>
+			</div>
+		</div>
+	</section>
+</Base>
+
+<script>
+	// Hand the visitor a message for a site they'd like to see add Leuria. Nothing is sent from here.
+	const pitch = document.querySelector<HTMLElement>("[data-pitch]");
+	if (pitch) {
+		const text = pitch.querySelector<HTMLElement>("[data-pitch-text]")!.textContent!.trim();
+		const copy = pitch.querySelector<HTMLButtonElement>("[data-pitch-copy]")!;
+		const label = pitch.querySelector<HTMLElement>("[data-pitch-label]")!;
+		const share = pitch.querySelector<HTMLButtonElement>("[data-pitch-share]")!;
+		let reset = 0;
+		copy.addEventListener("click", async () => {
+			try {
+				await navigator.clipboard.writeText(text);
+				label.textContent = "Copied";
+			} catch {
+				// No clipboard here: select the words so the visitor can copy them.
+				getSelection()?.selectAllChildren(pitch.querySelector("[data-pitch-text]")!);
+				label.textContent = "Selected, copy it";
+			}
+			clearTimeout(reset);
+			reset = window.setTimeout(() => (label.textContent = "Copy the message"), 2400);
+		});
+		if (navigator.share) {
+			share.hidden = false;
+			share.addEventListener("click", () => navigator.share({ text }).catch(() => {}));
+		}
+	}
+</script>
+
+<style>
+	/* One long backdrop: each section picks up the colour where the last one left off. */
+	/* No z-index here: the ground paints under the backdrop layer (z 1), the words over it (z 2). */
+	.zone {
+		position: relative;
+		overflow: clip;
+		/* Re-read the tokens of this zone's theme (light or Night). */
+		color: var(--text);
+	}
+	.intro {
+		min-height: 100svh;
+		background:
+			radial-gradient(60% 50% at 6% 4%, var(--atmo-blush), transparent 70%),
+			radial-gradient(50% 45% at 96% 2%, var(--atmo-ice), transparent 70%),
+			radial-gradient(60% 50% at 10% 96%, var(--atmo-lavender), transparent 70%),
+			linear-gradient(#eef0f7, #e4ebf6);
+	}
+	.uses-zone {
+		background: linear-gradient(#e4ebf6 0%, #d3dcf1 40%, #aeb6e0 80%, #7d86c2 100%);
+		padding-bottom: 18vh;
+	}
+	.privacy {
+		background: linear-gradient(#7d86c2 0, #3a3f75 22vh, #1c2040 48vh, #14172b 100%);
+		padding-top: 30vh;
+	}
+	.try-zone {
+		background: linear-gradient(#14172b, #0c0e1d);
+	}
+	.closing {
+		background:
+			radial-gradient(50% 40% at 50% 100%, rgb(184 172 254 / 0.16), transparent 70%),
+			linear-gradient(#0c0e1d, #070812);
+	}
+	.zone > .container {
+		position: relative;
+		z-index: 2;
+		padding-block: clamp(80px, 12vw, 160px);
+	}
+
+	/* Slow light across the top, fading down the page. */
+	.caustics {
+		position: absolute;
+		inset: -8%;
+		opacity: 0.55;
+		mix-blend-mode: soft-light;
+		background:
+			repeating-radial-gradient(circle at 30% 20%, transparent 0 22px, rgb(255 255 255 / 0.9) 24px, transparent 28px 60px),
+			repeating-radial-gradient(circle at 70% 60%, transparent 0 30px, rgb(255 255 255 / 0.8) 32px, transparent 36px 74px);
+		filter: blur(6px);
+		mask-image: linear-gradient(black, transparent 75%);
+		will-change: transform;
+		animation: shimmer 18s ease-in-out infinite alternate;
+		pointer-events: none;
+	}
+	@keyframes shimmer {
+		to {
+			transform: translate3d(3%, 2%, 0) scale(1.06);
+		}
+	}
+
+	/* Intro */
+	.hero {
+		display: grid;
+		align-content: end;
+		gap: clamp(24px, 4vw, 40px);
+		min-height: 100svh;
+		padding-top: 120px !important;
+		padding-bottom: clamp(40px, 7vw, 88px) !important;
+	}
+	/* Phones: room above the words for the manta. */
+	@media (max-width: 899px) {
+		.hero {
+			padding-top: max(120px, 36vh) !important;
+		}
+	}
+	.kicker,
+	.eyebrow {
+		color: var(--accent-text);
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		font-variant-numeric: tabular-nums;
+	}
+	.giant {
+		display: grid;
+		font-size: clamp(64px, min(10.8vw, 15.5vh), 188px);
+		line-height: 0.84;
+		font-weight: 800;
+		letter-spacing: -0.06em;
+		color: var(--ink);
+		margin-bottom: 0.08em;
+	}
+	.giant em {
+		font-style: normal;
+		background: linear-gradient(100deg, #14172b 30%, #654db6 60%, #006c93 90%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+	.hero-foot {
+		display: grid;
+		gap: var(--space-5);
+		max-width: 1000px;
+	}
+	@media (min-width: 900px) {
+		.hero-foot {
+			grid-template-columns: minmax(0, 460px) auto;
+			justify-content: space-between;
+			align-items: end;
+		}
+	}
+	.hero-lead {
+		font-size: 18px;
+		line-height: 28px;
+		color: var(--text-muted);
+	}
+	.hero-copy {
+		display: grid;
+		gap: var(--space-4);
+	}
+	/* The five gains, at a glance; the section under the hero tells each one. */
+	.hero-gains {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-5);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		color: var(--text);
+		font-size: 15px;
+		font-weight: 600;
+	}
+	.hero-gains li {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+	}
+	.hero-gains :global(.icon) {
+		color: var(--accent-text);
+	}
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-3);
+	}
+	.down {
+		display: inline-block;
+		animation: sink 1.8s ease-in-out infinite;
+	}
+	@keyframes sink {
+		50% {
+			transform: translateY(4px);
+		}
+	}
+
+	/* Shared zone heads */
+	.zone-head {
+		display: grid;
+		gap: var(--space-4);
+		max-width: 760px;
+		margin-bottom: clamp(48px, 8vw, 96px);
+	}
+	.big {
+		font-size: clamp(40px, 6.4vw, 88px);
+		line-height: 0.95;
+		font-weight: 800;
+		letter-spacing: -0.045em;
+		text-wrap: balance;
+	}
+	.giant-2 {
+		font-size: clamp(56px, 11vw, 168px);
+		line-height: 0.86;
+		font-weight: 800;
+		letter-spacing: -0.055em;
+	}
+	.zone-lead {
+		max-width: 560px;
+		font-size: 18px;
+		line-height: 28px;
+		color: var(--text-muted);
+	}
+
+	/* What it's for: soft rays from above */
+	.rays {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 110vh;
+		pointer-events: none;
+		mask-image: linear-gradient(black, transparent);
+	}
+	.rays i {
+		position: absolute;
+		top: -10%;
+		width: 14vw;
+		height: 120%;
+		background: linear-gradient(rgb(255 255 255 / 0.55), transparent 80%);
+		filter: blur(22px);
+		transform-origin: top;
+		animation: sway 14s ease-in-out infinite alternate;
+	}
+	.rays i:nth-child(1) {
+		left: 12%;
+		transform: rotate(14deg);
+	}
+	.rays i:nth-child(2) {
+		left: 38%;
+		width: 8vw;
+		transform: rotate(8deg);
+		animation-delay: -4s;
+	}
+	.rays i:nth-child(3) {
+		left: 62%;
+		transform: rotate(4deg);
+		animation-delay: -8s;
+	}
+	.rays i:nth-child(4) {
+		left: 84%;
+		width: 6vw;
+		transform: rotate(-2deg);
+		animation-delay: -2s;
+	}
+	@keyframes sway {
+		to {
+			translate: 3vw 0;
+			opacity: 0.6;
+		}
+	}
+
+	.gains {
+		display: grid;
+		gap: var(--space-7);
+		margin: 0 0 clamp(64px, 9vw, 112px);
+		padding: 0;
+		list-style: none;
+	}
+	@media (min-width: 760px) {
+		.gains {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	/* Three across, then two. */
+	@media (min-width: 1100px) {
+		.gains {
+			grid-template-columns: repeat(6, 1fr);
+		}
+		.gain {
+			grid-column: span 2;
+		}
+		.gain:nth-child(n + 4) {
+			grid-column: span 3;
+		}
+	}
+	.gain {
+		display: grid;
+		gap: var(--space-2);
+		align-content: start;
+		padding-top: var(--space-5);
+		border-top: 2px solid var(--ink);
+	}
+	.gain h3 {
+		margin: 0;
+		font-size: clamp(24px, 2.6vw, 32px);
+		line-height: 1.1;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		text-wrap: balance;
+	}
+	.gain p {
+		margin: 0;
+		max-width: 440px;
+		font-size: 17px;
+		line-height: 26px;
+		color: var(--text-muted);
+	}
+	/* Right under the hero: the gains come first, close to it. */
+	.zone > .gains-wrap {
+		padding-top: clamp(48px, 6vw, 80px);
+	}
+	.gains-eyebrow {
+		margin-bottom: var(--space-5);
+	}
+
+	.uses {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-top: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+	}
+	.use {
+		display: grid;
+		gap: var(--space-2) var(--space-6);
+		align-items: baseline;
+		padding: clamp(20px, 3vw, 36px) 0;
+		border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+	}
+	@media (min-width: 900px) {
+		.use {
+			grid-template-columns: 72px 1fr minmax(0, 340px);
+		}
+	}
+	.use-n {
+		color: var(--accent-text);
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+	}
+	.use-title {
+		font-size: clamp(36px, 6vw, 80px);
+		line-height: 1;
+		font-weight: 800;
+		letter-spacing: -0.045em;
+		transition:
+			transform var(--timing-base) var(--easing-standard),
+			color var(--timing-base) var(--easing-standard);
+	}
+	.use:hover .use-title {
+		transform: translateX(12px);
+		color: var(--accent-text);
+	}
+	.use-text {
+		color: var(--text-muted);
+	}
+
+	.how {
+		display: grid;
+		gap: clamp(48px, 6vw, 80px);
+		align-items: center;
+	}
+	@media (min-width: 1000px) {
+		.how {
+			grid-template-columns: 0.9fr 1.1fr;
+		}
+	}
+	.how-copy {
+		display: grid;
+		gap: var(--space-5);
+	}
+	.steps {
+		display: grid;
+		gap: var(--space-5);
+		margin: var(--space-4) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.steps li {
+		display: flex;
+		gap: var(--space-4);
+	}
+	.step-n {
+		display: grid;
+		flex-shrink: 0;
+		place-items: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		background: var(--ink);
+		color: var(--on-ink);
+		font-weight: 800;
+	}
+	.steps h3 {
+		margin: 0 0 2px;
+		font-size: 18px;
+		font-weight: 700;
+	}
+	.steps p {
+		margin: 0;
+		color: var(--text-muted);
+	}
+	.how-scene {
+		padding-bottom: 40px;
+		--approval-right: -8px;
+	}
+
+	.ais {
+		padding-top: 0 !important;
+	}
+	.ais-title {
+		margin-bottom: var(--space-5);
+		font-weight: 700;
+	}
+	.ai-list {
+		display: grid;
+		gap: var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	@media (min-width: 760px) {
+		.ai-list {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.ai {
+		display: grid;
+		gap: var(--space-2);
+		padding: var(--space-5);
+		border-radius: var(--radius-5);
+		background: rgb(255 255 255 / 0.4);
+		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.55);
+		backdrop-filter: blur(10px);
+		color: var(--text);
+	}
+	.ai h3 {
+		margin: var(--space-2) 0 0;
+		font-size: 17px;
+		font-weight: 700;
+	}
+	.ai p {
+		margin: 0;
+		color: var(--text-muted);
+	}
+
+	/* Privacy */
+	.consent {
+		display: grid;
+		gap: clamp(32px, 5vw, 64px);
+	}
+	@media (min-width: 760px) {
+		.consent {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	.consent-title {
+		display: flex;
+		align-items: center;
+		gap: var(--space-3);
+		margin-bottom: var(--space-4);
+		font-size: 20px;
+		font-weight: 800;
+	}
+	.glow {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: var(--c);
+		box-shadow:
+			0 0 12px 2px var(--c),
+			0 0 40px 8px color-mix(in oklab, var(--c) 45%, transparent);
+		animation: breathe 3s ease-in-out infinite;
+	}
+	.can {
+		--c: #6ed0a2;
+	}
+	.cant {
+		--c: #ff9a86;
+	}
+	@keyframes breathe {
+		50% {
+			opacity: 0.55;
+		}
+	}
+	.consent ul {
+		display: grid;
+		gap: var(--space-3);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.consent li {
+		padding: var(--space-4) 0 var(--space-4) var(--space-5);
+		border-left: 2px solid color-mix(in oklab, var(--c) 60%, transparent);
+		font-size: 18px;
+		line-height: 26px;
+	}
+	.facts {
+		display: grid;
+		gap: var(--space-6);
+		margin: clamp(64px, 9vw, 112px) 0 0;
+		padding-top: var(--space-6);
+		border-top: 1px solid rgb(255 255 255 / 0.12);
+	}
+	@media (min-width: 760px) {
+		.facts {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.facts dt {
+		margin-bottom: var(--space-2);
+		font-weight: 700;
+	}
+	.facts dd {
+		margin: 0;
+		color: var(--text-muted);
+	}
+
+	/* Try it */
+	.try-grid {
+		display: grid;
+		gap: var(--space-7);
+		align-items: center;
+	}
+	@media (min-width: 1000px) {
+		.try-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+		.try-grid .zone-head {
+			margin: 0;
+		}
+	}
+
+	/* Spread the word */
+	.spread {
+		background: #0c0e1d;
+	}
+	.spread-grid {
+		display: grid;
+		gap: var(--space-7);
+		align-items: center;
+	}
+	@media (min-width: 1000px) {
+		.spread-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+		.spread-grid .zone-head {
+			margin: 0;
+		}
+	}
+	.pitch {
+		display: grid;
+		gap: var(--space-4);
+		margin: 0;
+		padding: var(--space-6);
+		border-radius: var(--radius-5);
+	}
+	.pitch figcaption {
+		color: var(--text-muted);
+		font-size: 13px;
+		font-weight: 700;
+	}
+	.pitch blockquote {
+		margin: 0;
+		font-size: 18px;
+		line-height: 28px;
+		user-select: all;
+	}
+	.pitch-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+	}
+
+	/* Closing: the pearl */
+	.closing-inner {
+		display: grid;
+		justify-items: center;
+		gap: var(--space-5);
+		text-align: center;
+		padding-bottom: clamp(96px, 14vw, 180px) !important;
+	}
+	.closing .zone-lead {
+		margin-inline: auto;
+	}
+	.pearl {
+		position: relative;
+		width: clamp(140px, 22vw, 240px);
+		aspect-ratio: 1;
+		margin-bottom: var(--space-6);
+		border-radius: 50%;
+		background:
+			radial-gradient(38% 34% at 34% 28%, #ffffff, transparent 70%),
+			radial-gradient(60% 60% at 70% 75%, #cde8f7, transparent 70%),
+			radial-gradient(70% 70% at 25% 80%, #f9dce6, transparent 72%),
+			radial-gradient(80% 80% at 80% 20%, #d9d0ff, transparent 75%),
+			#d3f3e6;
+		box-shadow:
+			inset -18px -24px 40px rgb(20 23 43 / 0.35),
+			inset 10px 12px 30px rgb(255 255 255 / 0.5),
+			0 0 60px 10px rgb(217 208 255 / 0.25),
+			0 0 160px 40px rgb(109 197 241 / 0.12);
+		animation: float 6s ease-in-out infinite;
+	}
+	.pearl span {
+		position: absolute;
+		inset: -40% -60% auto;
+		height: 20%;
+		top: 110%;
+		border-radius: 50%;
+		background: radial-gradient(rgb(0 0 0 / 0.55), transparent 70%);
+		filter: blur(10px);
+	}
+	@keyframes float {
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+	.closing-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--space-3);
+		margin-top: var(--space-3);
+	}
+</style>

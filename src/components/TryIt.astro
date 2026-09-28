@@ -1,0 +1,223 @@
+---
+/**
+ * leuria.eu is a Leuria site: the visitor connects their own AI here and
+ * asks about Leuria. Their AI reads this page through a tool the page
+ * gives it, and nothing else.
+ */
+interface Props {
+	/** The elements' theme, when the block sits on a dark ground. */
+	appearance?: "light" | "dark";
+}
+
+const { appearance } = Astro.props;
+const suggestions = ["What does Leuria do, in two sentences?", "Can a website see my files?", "Which AIs can I use?"];
+---
+
+<div class="try card" data-try>
+	<div class="try-head">
+		<leuria-connect-button size="1" hide-byline appearance={appearance}></leuria-connect-button>
+	</div>
+
+	<div class="answer" aria-live="polite" data-answer hidden></div>
+
+	<div class="suggestions" data-suggestions>
+		{
+			suggestions.map((text) => (
+				<button type="button" class="chip" data-suggestion>
+					{text}
+				</button>
+			))
+		}
+	</div>
+
+	<form class="composer" data-form>
+		<label class="visually-hidden" for="try-question">Your question</label>
+		<input id="try-question" name="question" placeholder="Ask your AI about Leuria" autocomplete="off" required />
+		<button class="btn btn-quiet send" type="submit">Ask</button>
+	</form>
+</div>
+
+<script>
+	import { bridge, createLeuria, NoProviderError, type ToolDefinition } from "@leuria/client";
+	import { setDefaultClient } from "@leuria/connect";
+
+	const ai = createLeuria({ providers: [bridge({ app: "Leuria" })] });
+	setDefaultClient(ai);
+
+	/** The page's words, for the visitor's AI: the one thing it may read here. */
+	const readThisPage: ToolDefinition = {
+		name: "read_this_page",
+		description: "Returns the text of the leuria.eu page the visitor is on: what Leuria is, how it works, privacy.",
+		inputSchema: { type: "object", properties: {} },
+		execute: () => (document.querySelector("main")?.innerText ?? "").slice(0, 12000),
+	};
+
+	const root = document.querySelector<HTMLElement>("[data-try]")!;
+	const form = root.querySelector<HTMLFormElement>("[data-form]")!;
+	const input = form.querySelector("input")!;
+	const send = form.querySelector<HTMLButtonElement>("button")!;
+	const answer = root.querySelector<HTMLElement>("[data-answer]")!;
+
+	let running: { abort(): void } | undefined;
+	/** A question asked before the visitor's AI was connected: asked as soon as it is. */
+	let queued: string | undefined;
+
+	function waitForAI(question: string): void {
+		queued = question;
+		answer.hidden = false;
+		answer.dataset.state = "waiting";
+		answer.textContent = "Connect your AI above: your question will be asked as soon as it's connected.";
+	}
+
+	ai.subscribe(() => {
+		if (!queued || !ai.getState().active) return;
+		const question = queued;
+		queued = undefined;
+		void ask(question);
+	});
+
+	async function ask(question: string): Promise<void> {
+		running?.abort();
+		if (!ai.getState().active) return waitForAI(question);
+		queued = undefined;
+		answer.hidden = false;
+		answer.dataset.state = "thinking";
+		answer.textContent = "Thinking…";
+		send.disabled = true;
+		const run = ai.chat({
+			system:
+				"You answer visitors of leuria.eu about Leuria. Read the page with read_this_page first and answer only from it, in at most three short sentences, in the visitor's language. Plain words, no jargon.",
+			prompt: question,
+			tools: [readThisPage],
+		});
+		running = run;
+		let text = "";
+		try {
+			for await (const event of run) {
+				if (event.type === "text-delta") {
+					text += event.text;
+					// Models often open with blank lines (after reading the page, say): don't show them.
+					if (!text.trim()) continue;
+					answer.dataset.state = "answering";
+					answer.textContent = text.trimStart();
+				}
+			}
+			const result = await run.result();
+			answer.dataset.state = "done";
+			answer.textContent = (result.text || text).trim();
+		} catch (error) {
+			console.warn("[leuria.eu] ask:", error);
+			if (error instanceof NoProviderError) {
+				waitForAI(question);
+			} else {
+				answer.dataset.state = "problem";
+				answer.textContent = "Your AI couldn't answer this time. Try again.";
+			}
+		} finally {
+			if (running === run) running = undefined;
+			send.disabled = false;
+		}
+	}
+
+	form.addEventListener("submit", (event) => {
+		event.preventDefault();
+		const question = input.value.trim();
+		if (question) void ask(question);
+	});
+	for (const chip of root.querySelectorAll<HTMLButtonElement>("[data-suggestion]")) {
+		chip.addEventListener("click", () => {
+			input.value = chip.textContent?.trim() ?? "";
+			void ask(input.value);
+		});
+	}
+</script>
+
+<style>
+	.try {
+		display: grid;
+		gap: var(--space-4);
+		padding: var(--space-5);
+		border-radius: var(--radius-5);
+		box-shadow:
+			var(--shadow-3),
+			0 0 0 1px var(--border);
+	}
+	.try-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-3);
+	}
+	.answer {
+		padding: var(--space-4);
+		border-radius: var(--radius-4);
+		background: var(--surface-sunken);
+		font-size: 16px;
+		line-height: 24px;
+		white-space: pre-wrap;
+		box-shadow: inset 0 0 0 1px var(--border);
+	}
+	.answer[data-state="thinking"],
+	.answer[data-state="waiting"] {
+		color: var(--text-muted);
+	}
+	.answer[data-state="problem"] {
+		background: var(--blocked-soft);
+		color: var(--blocked-text);
+		box-shadow: none;
+	}
+	.suggestions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+	}
+	.chip {
+		min-height: 36px;
+		padding: 0 var(--space-3);
+		border: 0;
+		border-radius: var(--radius-full);
+		background: var(--accent-soft);
+		color: var(--accent-text);
+		font: inherit;
+		font-size: 14px;
+		font-weight: 500;
+		cursor: pointer;
+		transition: background var(--timing-fast) var(--easing-standard);
+	}
+	.chip:hover {
+		background: var(--lavender-4);
+	}
+	.composer {
+		display: flex;
+		gap: var(--space-2);
+	}
+	.composer input {
+		flex: 1;
+		min-width: 0;
+		min-height: var(--target-min);
+		padding: 0 var(--space-4);
+		border: 0;
+		border-radius: var(--radius-full);
+		background: var(--surface);
+		color: var(--text);
+		font: inherit;
+		box-shadow: inset 0 0 0 1px var(--border-control);
+	}
+	.composer input:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 0;
+	}
+	.send:disabled {
+		opacity: 0.6;
+		cursor: default;
+	}
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+</style>

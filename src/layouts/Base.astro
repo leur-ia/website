@@ -1,0 +1,246 @@
+---
+import { Font } from "astro:assets";
+
+import DownloadButton from "../components/DownloadButton.astro";
+import Logo from "../components/Logo.astro";
+import { DEVELOPERS_URL } from "../data/site";
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description: string;
+	/** Hide the header's download action on pages whose own main action is the download. */
+	headerDownload?: boolean;
+	/** The header floats over the page and takes the theme of the section under it. */
+	immersive?: boolean;
+}
+
+const { title, description, headerDownload = true, immersive = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const nav = [
+	{ href: "/#how", label: "How it works" },
+	{ href: "/#privacy", label: "Privacy" },
+	{ href: "/websites", label: "For websites" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Leuria" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="theme-color" content="#eef0f7" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#0f1120" media="(prefers-color-scheme: dark)" />
+		<Font cssVariable="--font-jakarta" preload />
+		<Font cssVariable="--font-geist-mono" />
+	</head>
+	<body class:list={{ immersive }}>
+		<a class="skip" href="#main">Skip to content</a>
+		<header class="site-header" data-header>
+			<div class="container bar">
+				<a href="/" class="home" aria-label="Leuria, home"><Logo size={26} /></a>
+				<nav aria-label="Main">
+					<ul>
+						{
+							nav.map((item) => (
+								<li>
+									<a href={item.href} aria-current={item.href === path ? "page" : undefined}>
+										{item.label}
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</nav>
+				{headerDownload && <div class="header-action"><DownloadButton variant="quiet" size="md" /></div>}
+			</div>
+		</header>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer class="site-footer" data-theme={immersive ? "dark" : undefined}>
+			<div class="container footer-grid">
+				<div class="footer-brand">
+					<Logo size={24} />
+					<p class="muted">Use the AI you already have, on the websites you choose.</p>
+				</div>
+				<nav aria-label="Footer">
+					<p class="footer-title">Leuria</p>
+					<ul>
+						<li><a href="/download">Download</a></li>
+						<li><a href="/#how">How it works</a></li>
+						<li><a href="/#privacy">Privacy</a></li>
+					</ul>
+				</nav>
+				<nav aria-label="For websites">
+					<p class="footer-title">For websites</p>
+					<ul>
+						<li><a href="/websites">Add Leuria to your site</a></li>
+						<li><a href={DEVELOPERS_URL}>Developer docs</a></li>
+					</ul>
+				</nav>
+			</div>
+			<div class="container">
+				<p class="footer-legal muted">Leuria is open source, under the Apache 2.0 license.</p>
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style>
+	.skip {
+		position: absolute;
+		left: var(--space-4);
+		top: -100px;
+		z-index: 100;
+		padding: var(--space-2) var(--space-4);
+		border-radius: var(--radius-full);
+		background: var(--ink);
+		color: var(--on-ink);
+	}
+	.skip:focus {
+		top: var(--space-3);
+	}
+
+	.immersive .site-header {
+		position: fixed;
+		inset: 0 0 auto;
+		background: transparent;
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+		box-shadow: none;
+		color: var(--text);
+		transition: color var(--timing-base) var(--easing-standard);
+	}
+	.immersive .site-header.is-scrolled {
+		background: color-mix(in oklab, var(--bg) 70%, transparent);
+		backdrop-filter: blur(16px) saturate(1.4);
+		-webkit-backdrop-filter: blur(16px) saturate(1.4);
+		box-shadow: 0 1px 0 color-mix(in oklab, var(--border) 60%, transparent);
+	}
+	.immersive .site-header :global(.logo) {
+		color: var(--ink);
+		transition: color var(--timing-base) var(--easing-standard);
+	}
+	.immersive .site-footer {
+		position: relative;
+		z-index: 1;
+		background: #070812;
+		border-top-color: rgb(255 255 255 / 0.08);
+	}
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: color-mix(in oklab, var(--bg) 72%, transparent);
+		backdrop-filter: blur(16px) saturate(1.4);
+		-webkit-backdrop-filter: blur(16px) saturate(1.4);
+		box-shadow: 0 1px 0 color-mix(in oklab, var(--border) 70%, transparent);
+	}
+	.bar {
+		display: flex;
+		align-items: center;
+		gap: var(--space-5);
+		min-height: 68px;
+	}
+	.home {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--target-min);
+		text-decoration: none;
+	}
+	nav ul {
+		display: flex;
+		gap: var(--space-1);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.bar nav {
+		margin-left: auto;
+	}
+	.bar nav a {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--target-min);
+		padding: 0 var(--space-3);
+		border-radius: var(--radius-full);
+		color: var(--text-muted);
+		font-size: 15px;
+		font-weight: 500;
+		text-decoration: none;
+		transition: color var(--timing-fast) var(--easing-standard);
+	}
+	.bar nav a:hover,
+	.bar nav a[aria-current="page"] {
+		color: var(--text);
+	}
+	/* Phones: the logo and the download; the sections are one scroll away. */
+	@media (max-width: 719px) {
+		.bar nav {
+			display: none;
+		}
+		.header-action {
+			margin-left: auto;
+		}
+	}
+
+	.site-footer {
+		padding: var(--space-9) 0 var(--space-7);
+		border-top: 1px solid var(--border);
+		background: var(--surface-sunken);
+		font-size: 14px;
+		line-height: 20px;
+	}
+	.footer-grid {
+		display: grid;
+		gap: var(--space-6);
+	}
+	@media (min-width: 720px) {
+		.footer-grid {
+			grid-template-columns: 2fr 1fr 1fr;
+		}
+	}
+	.footer-brand {
+		display: grid;
+		gap: var(--space-3);
+		align-content: start;
+		max-width: 320px;
+	}
+	.footer-title {
+		margin-bottom: var(--space-2);
+		font-weight: 700;
+	}
+	.site-footer nav ul {
+		display: grid;
+		gap: 0;
+	}
+	.site-footer nav a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 32px;
+		color: var(--text-muted);
+		text-decoration: none;
+	}
+	.site-footer nav a:hover {
+		color: var(--text);
+	}
+	.footer-legal {
+		margin-top: var(--space-7);
+		padding-top: var(--space-5);
+		border-top: 1px solid var(--border);
+		font-size: 12px;
+	}
+</style>

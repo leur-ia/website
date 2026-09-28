@@ -1,0 +1,286 @@
+---
+import Icon from "../components/Icon.astro";
+import Logo from "../components/Logo.astro";
+import Ocean from "../components/Ocean.astro";
+import { BREW_INSTALL, downloads, type Platform } from "../data/site";
+import Base from "../layouts/Base.astro";
+
+const platforms = Object.entries(downloads) as Array<[Platform, (typeof downloads)[Platform]]>;
+---
+
+<Base
+	title="Download Leuria"
+	description="Download Leuria for Mac, Windows or Linux, and use your own AI on the websites you choose."
+	headerDownload={false}
+>
+	<Ocean intro={false} />
+	<section class="download atmosphere">
+		<div class="container inner">
+			<div class="head" data-float>
+				<span class="app-icon reveal"><Logo size={64} wordmark={false} /></span>
+				<h1 class="display reveal" style="animation-delay: 60ms">Download Leuria</h1>
+				<p class="lead reveal" style="animation-delay: 120ms">Free and open source. For your computer, not your phone.</p>
+			</div>
+
+			<ul class="platforms">
+				{
+					platforms.map(([id, build], i) => (
+						<li data-float class="platform card reveal" data-platform={id} style={`animation-delay: ${180 + i * 60}ms`}>
+							<h2 class="heading-3">{build.name}</h2>
+							{build.url ? (
+								<>
+									<a class="btn btn-quiet" href={build.url} data-get>
+										<Icon name="download" />
+										Download for {build.name}
+									</a>
+									{build.intel && (
+										<a class="other" href={build.intel} data-intel>
+											Intel Mac? Download this one
+										</a>
+									)}
+								</>
+							) : (
+								<p class="soon">Not available yet</p>
+							)}
+							<p class="yours">Your computer</p>
+						</li>
+					))
+				}
+			</ul>
+			{platforms.every(([, build]) => !build.url) && <p class="note muted">The first builds are on their way. Check back soon.</p>}
+
+			<div class="brew card" data-float="heavy">
+				<p class="brew-title">Prefer Homebrew<span class="punct">?</span></p>
+				<div class="brew-line">
+					<code data-brew>{BREW_INSTALL}</code>
+					<button type="button" class="btn btn-quiet" data-brew-copy><Icon name="copy" size={16} /><span data-brew-label>Copy</span></button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" aria-labelledby="next-title">
+		<div class="container">
+			<div class="section-head">
+				<p class="eyebrow">After the download</p>
+				<h2 class="heading-1" id="next-title">Three steps<span class="punct">,</span> then you're set</h2>
+			</div>
+			<ol class="next">
+				<li class="card" data-float>
+					<span class="n">1</span>
+					<h3 class="heading-3">Open Leuria</h3>
+					<p class="muted">
+						Drag it to Applications and open it. The first time, your Mac asks you to confirm: open System Settings, then Privacy &amp;
+						Security, and click “Open Anyway”. It then stays in the background, ready for the sites you connect.
+					</p>
+				</li>
+				<li class="card" data-float>
+					<span class="n">2</span>
+					<h3 class="heading-3">Choose your AI</h3>
+					<p class="muted">An AI app you use (ChatGPT, Claude, Gemini…), a model on your computer, or an AI service with a key.</p>
+				</li>
+				<li class="card" data-float>
+					<span class="n">3</span>
+					<h3 class="heading-3">Connect a site</h3>
+					<p class="muted">Click “Connect your AI” on a site that offers it, and allow it in Leuria's window.</p>
+				</li>
+			</ol>
+		</div>
+	</section>
+</Base>
+
+<script>
+	// Put the visitor's own system first, and say so.
+	const ua = navigator.userAgent;
+	const system = /Mac OS X|Macintosh/.test(ua) && !/iPhone|iPad/.test(ua) ? "mac" : /Windows/.test(ua) ? "windows" : /Linux/.test(ua) && !/Android/.test(ua) ? "linux" : undefined;
+	const card = system && document.querySelector<HTMLElement>(`[data-platform="${system}"]`);
+	if (card) {
+		card.classList.add("is-yours");
+		card.parentElement?.prepend(card);
+		card.querySelector("[data-get]")?.classList.replace("btn-quiet", "btn-ink");
+	}
+
+	// Chrome and Edge can tell an Intel Mac: offer its build first.
+	const hints = (navigator as { userAgentData?: { getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }> } }).userAgentData;
+	hints
+		?.getHighEntropyValues(["architecture"])
+		.then(({ architecture }) => {
+			const get = document.querySelector<HTMLAnchorElement>('[data-platform="mac"] [data-get]');
+			const intel = document.querySelector<HTMLAnchorElement>('[data-platform="mac"] [data-intel]');
+			if (architecture !== "x86" || !get || !intel) return;
+			[get.href, intel.href] = [intel.href, get.href];
+			intel.textContent = "Apple Silicon Mac? Download this one";
+		})
+		.catch(() => {});
+
+	const copy = document.querySelector<HTMLButtonElement>("[data-brew-copy]");
+	copy?.addEventListener("click", async () => {
+		const label = copy.querySelector("[data-brew-label]")!;
+		try {
+			await navigator.clipboard.writeText(document.querySelector("[data-brew]")!.textContent!.trim());
+			label.textContent = "Copied";
+		} catch {
+			getSelection()?.selectAllChildren(document.querySelector("[data-brew]")!);
+			label.textContent = "Selected";
+		}
+		setTimeout(() => (label.textContent = "Copy"), 2000);
+	});
+</script>
+
+<style>
+	.other {
+		color: var(--text-muted);
+		font-size: 13px;
+	}
+	.other:hover {
+		color: var(--accent-text);
+	}
+	.brew {
+		display: grid;
+		gap: var(--space-3);
+		justify-self: center;
+		width: min(560px, 100%);
+		padding: var(--space-5);
+		border-radius: var(--radius-5);
+	}
+	.brew-title {
+		font-weight: 700;
+	}
+	.brew-line {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-3);
+	}
+	.brew code {
+		flex: 1;
+		min-width: 0;
+		padding: var(--space-2) var(--space-3);
+		border-radius: var(--radius-3);
+		background: var(--surface-sunken);
+		font-size: 14px;
+		/* Keep "--cask" as two hyphens, never a joined dash. */
+		font-variant-ligatures: none;
+		font-feature-settings: "calt" 0, "liga" 0;
+		overflow-wrap: anywhere;
+		user-select: all;
+	}
+	.download {
+		padding: clamp(56px, 9vw, 112px) 0;
+	}
+	.inner {
+		display: grid;
+		gap: clamp(40px, 6vw, 56px);
+	}
+	.head {
+		display: grid;
+		justify-items: center;
+		gap: var(--space-4);
+		text-align: center;
+	}
+	.app-icon {
+		display: grid;
+		place-items: center;
+		width: 104px;
+		height: 104px;
+		margin-bottom: var(--space-2);
+		border-radius: 24px;
+		background:
+			radial-gradient(70% 70% at 0% 0%, var(--atmo-blush), transparent 70%),
+			radial-gradient(70% 70% at 100% 0%, var(--atmo-ice), transparent 70%),
+			radial-gradient(70% 70% at 100% 100%, var(--atmo-mint), transparent 70%),
+			radial-gradient(70% 70% at 0% 100%, var(--atmo-lavender), transparent 70%),
+			#eef0f7;
+		box-shadow:
+			var(--shadow-4),
+			inset 0 0 0 1px rgb(255 255 255 / 0.6);
+	}
+	.app-icon :global(.logo) {
+		color: #14172b;
+	}
+	.platforms {
+		display: grid;
+		gap: var(--space-4);
+		width: 100%;
+		max-width: 920px;
+		margin: 0 auto;
+		padding: 0;
+		list-style: none;
+	}
+	@media (min-width: 760px) {
+		.platforms {
+			grid-template-columns: repeat(3, 1fr);
+		}
+		.platform {
+			min-height: 160px;
+		}
+	}
+	.platform {
+		position: relative;
+		display: grid;
+		align-content: space-between;
+		gap: var(--space-4);
+		padding: var(--space-5);
+		border-radius: var(--radius-5);
+	}
+	.platform.is-yours {
+		box-shadow:
+			var(--shadow-3),
+			0 0 0 2px var(--accent);
+	}
+	.yours {
+		display: none;
+		position: absolute;
+		top: var(--space-4);
+		right: var(--space-4);
+		padding: 2px var(--space-2);
+		border-radius: var(--radius-full);
+		background: var(--accent-soft);
+		color: var(--accent-text);
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.is-yours .yours {
+		display: block;
+	}
+	.soon {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--target-min);
+		color: var(--text-muted);
+		font-weight: 600;
+	}
+	.note {
+		text-align: center;
+	}
+
+	.next {
+		display: grid;
+		gap: var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	@media (min-width: 760px) {
+		.next {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.next li {
+		display: grid;
+		align-content: start;
+		gap: var(--space-2);
+		padding: var(--space-6) var(--space-5);
+	}
+	.n {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		margin-bottom: var(--space-2);
+		border-radius: 50%;
+		background: var(--accent-soft);
+		color: var(--accent-text);
+		font-weight: 800;
+	}
+</style>

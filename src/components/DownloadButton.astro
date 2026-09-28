@@ -1,0 +1,53 @@
+---
+/**
+ * The download action. It names the visitor's system once the page knows
+ * it ("Download for Mac"), and links straight to the build when there is
+ * one; otherwise it opens the download page ("Get Leuria").
+ */
+import { downloads } from "../data/site";
+import Icon from "./Icon.astro";
+
+interface Props {
+	variant?: "ink" | "quiet";
+	size?: "md" | "lg";
+}
+
+const { variant = "ink", size = "lg" } = Astro.props;
+---
+
+<a class:list={["btn", `btn-${variant}`, `btn-${size}`]} href="/download" data-download data-downloads={JSON.stringify(downloads)}>
+	<Icon name="download" size={size === "lg" ? 20 : 18} />
+	<span data-download-label>Get Leuria</span>
+</a>
+
+<script>
+	import type { Platform } from "../data/site";
+
+	function platform(): Platform | undefined {
+		const ua = navigator.userAgent;
+		if (/Mac OS X|Macintosh/.test(ua) && !/iPhone|iPad/.test(ua)) return "mac";
+		if (/Windows/.test(ua)) return "windows";
+		if (/Linux/.test(ua) && !/Android/.test(ua)) return "linux";
+		return undefined;
+	}
+
+	/** Chrome and Edge can tell an Intel Mac; Safari can't, and gets the Apple Silicon build. */
+	async function intelMac(): Promise<boolean> {
+		const data = (navigator as { userAgentData?: { getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }> } }).userAgentData;
+		try {
+			return (await data?.getHighEntropyValues(["architecture"]))?.architecture === "x86";
+		} catch {
+			return false;
+		}
+	}
+
+	const system = platform();
+	const intel = system === "mac" && (await intelMac());
+	for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-download]")) {
+		const builds = JSON.parse(link.dataset.downloads ?? "{}") as Record<Platform, { name: string; url: string | null; intel?: string }>;
+		const build = system && builds[system];
+		if (!build?.url) continue;
+		link.href = (intel && build.intel) || build.url;
+		link.querySelector("[data-download-label]")!.textContent = `Download for ${build.name}`;
+	}
+</script>

@@ -1,0 +1,9 @@
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+
+# Until the Leuria packages are on npm: use them from the leuria repo next
+# to this one (../leuria). Delete these overrides to use the published ones.
+overrides:
+  '@leuria/client': link:../leuria/packages/client
+  '@leuria/connect': link:../leuria/packages/connect

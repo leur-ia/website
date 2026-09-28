@@ -1,0 +1,214 @@
+---
+import Icon from "../components/Icon.astro";
+import Ocean from "../components/Ocean.astro";
+import { DEVELOPERS_URL } from "../data/site";
+import Base from "../layouts/Base.astro";
+
+const reasons = [
+	{
+		icon: "key",
+		title: "No AI bill, no keys",
+		text: "Your visitors' own AI answers. You don't pay per question, and there is no key to protect in your page or on your server.",
+	},
+	{
+		icon: "search",
+		title: "Your features, your data",
+		text: "The AI calls tools that run in your page: search your catalogue, fill your form, read your docs. Your data stays in your code.",
+	},
+	{
+		icon: "shield",
+		title: "Trust built in",
+		text: "Visitors approve your site in Leuria's own window, which shows what you can and can't do. Nothing runs until they say yes.",
+	},
+	{
+		icon: "globe",
+		title: "Works for every visitor",
+		text: "No Leuria yet? The same feature can use the browser's built-in AI, a small model in the page, or your own server.",
+	},
+] as const;
+---
+
+<Base
+	title="Leuria for websites · AI features that run on your visitors' AI"
+	description="Add AI features to your website without paying for AI. Your visitors bring their own, through Leuria, and your tools run in your page."
+>
+	<Ocean intro={false} />
+	<section class="hero atmosphere">
+		<div class="container hero-inner" data-float>
+			<p class="eyebrow reveal">For websites</p>
+			<h1 class="display reveal" style="animation-delay: 60ms">AI features that run on your visitors' AI</h1>
+			<p class="lead reveal" style="animation-delay: 120ms">
+				Add an assistant, answers from your docs or search by meaning. Your visitors connect the AI they already have, and you pay for
+				no model.
+			</p>
+			<div class="actions reveal" style="animation-delay: 180ms">
+				<a class="btn btn-ink btn-lg" href={DEVELOPERS_URL}>Read the developer docs <Icon name="arrow-right" /></a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" aria-labelledby="why-title">
+		<div class="container">
+			<div class="section-head">
+				<p class="eyebrow">Why Leuria</p>
+				<h2 class="heading-1" id="why-title">The AI is theirs<span class="punct">,</span> the experience is yours</h2>
+			</div>
+			<ul class="reasons">
+				{
+					reasons.map((reason) => (
+						<li class="reason card" data-float>
+							<span class="reason-icon">
+								<Icon name={reason.icon} size={20} />
+							</span>
+							<h3 class="heading-3">{reason.title}</h3>
+							<p class="muted">{reason.text}</p>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section code-section" aria-labelledby="code-title">
+		<div class="container code-grid">
+			<div class="section-head">
+				<p class="eyebrow">A few lines</p>
+				<h2 class="heading-1" id="code-title">Add the button<span class="punct">,</span> then ask</h2>
+				<p class="lead">
+					“Connect your AI” handles the rest: finding Leuria, asking the visitor, and offering another AI when they don't have it.
+					Plain JavaScript, React, or any framework.
+				</p>
+				<p><a class="btn btn-link" href={DEVELOPERS_URL}>Start with the quickstart <Icon name="arrow-right" /></a></p>
+			</div>
+			<figure class="code card" data-float="heavy">
+				<figcaption>shop.js</figcaption>
+				<pre><code><span class="k">import</span> {"{"} bridge, browserAI, createLeuria {"}"} <span class="k">from</span> <span class="s">"@leuria/client"</span>
+<span class="k">import</span> {"{"} setDefaultClient {"}"} <span class="k">from</span> <span class="s">"@leuria/connect"</span>
+
+<span class="k">const</span> ai = createLeuria({"{"} providers: [bridge(), browserAI()] {"}"})
+setDefaultClient(ai)   <span class="c">// &lt;leuria-connect-button&gt; uses it</span>
+
+<span class="k">const</span> answer = <span class="k">await</span> ai.chat({"{"}
+  prompt: <span class="s">"A mug that keeps tea warm, under €30?"</span>,
+  tools: [searchProducts],   <span class="c">// runs in your page</span>
+{"}"}).text()</code></pre>
+			</figure>
+		</div>
+	</section>
+
+	<section class="section closing atmosphere" aria-labelledby="closing-title">
+		<div class="container closing-inner">
+			<h2 class="heading-1" id="closing-title">Open source<span class="punct">,</span> from the button to the app</h2>
+			<p class="lead">The libraries and the desktop app are open source, under the Apache 2.0 license.</p>
+			<a class="btn btn-quiet btn-lg" href={DEVELOPERS_URL}>Go to leuria.dev <Icon name="arrow-right" /></a>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.hero {
+		padding: clamp(64px, 10vw, 128px) 0;
+	}
+	.hero-inner {
+		display: grid;
+		justify-items: center;
+		gap: var(--space-5);
+		max-width: 860px;
+		text-align: center;
+	}
+	.hero-inner .lead {
+		max-width: 620px;
+	}
+	.actions {
+		margin-top: var(--space-2);
+	}
+
+	.reasons {
+		display: grid;
+		gap: var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	@media (min-width: 760px) {
+		.reasons {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	.reason {
+		display: grid;
+		align-content: start;
+		gap: var(--space-2);
+		padding: var(--space-6) var(--space-5);
+	}
+	.reason-icon {
+		display: grid;
+		place-items: center;
+		width: 40px;
+		height: 40px;
+		margin-bottom: var(--space-3);
+		border-radius: var(--radius-3);
+		background: var(--accent-soft);
+		color: var(--accent-text);
+	}
+
+	.code-section {
+		background: var(--surface-sunken);
+		border-block: 1px solid var(--border);
+	}
+	.code-grid {
+		display: grid;
+		gap: var(--space-6);
+		align-items: center;
+	}
+	@media (min-width: 1000px) {
+		.code-grid {
+			grid-template-columns: 1fr 1.15fr;
+		}
+		.code-grid .section-head {
+			margin: 0;
+		}
+	}
+	.code {
+		margin: 0;
+		overflow: hidden;
+		border-radius: var(--radius-4);
+		background: #14172b;
+		color: #d6d8e5;
+		box-shadow: var(--shadow-4);
+	}
+	figcaption {
+		padding: var(--space-3) var(--space-5);
+		border-bottom: 1px solid rgb(255 255 255 / 0.08);
+		color: #9a9db3;
+		font-family: var(--font-mono);
+		font-size: 12px;
+	}
+	pre {
+		margin: 0;
+		padding: var(--space-5);
+		overflow-x: auto;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		line-height: 21px;
+	}
+	.k {
+		color: #b8acfe;
+	}
+	.s {
+		color: #96e0bb;
+	}
+	.c {
+		color: #7c7f92;
+	}
+
+	.closing-inner {
+		display: grid;
+		justify-items: center;
+		gap: var(--space-4);
+		text-align: center;
+	}
+	.closing .btn {
+		margin-top: var(--space-2);
+	}
+</style>
