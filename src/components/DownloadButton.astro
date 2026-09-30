@@ -44,7 +44,7 @@ const { variant = "ink", size = "lg", more = false } = Astro.props;
 </style>
 
 <script>
-	import type { Platform } from "../data/site";
+	import type { Build, Platform } from "../data/site";
 
 	function platform(): Platform | undefined {
 		const ua = navigator.userAgent;
@@ -54,23 +54,26 @@ const { variant = "ink", size = "lg", more = false } = Astro.props;
 		return undefined;
 	}
 
-	/** Chrome and Edge can tell an Intel Mac; Safari can't, and gets the Apple Silicon build. */
-	async function intelMac(): Promise<boolean> {
+	/**
+	 * The processor, where the browser says (Chrome and Edge): "x86" or "arm".
+	 * Safari doesn't, so a Mac gets the Apple Silicon build.
+	 */
+	async function architecture(): Promise<string | undefined> {
 		const data = (navigator as { userAgentData?: { getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }> } }).userAgentData;
 		try {
-			return (await data?.getHighEntropyValues(["architecture"]))?.architecture === "x86";
+			return (await data?.getHighEntropyValues(["architecture"]))?.architecture;
 		} catch {
-			return false;
+			return undefined;
 		}
 	}
 
 	const system = platform();
-	const intel = system === "mac" && (await intelMac());
+	const arch = system === "mac" || system === "windows" ? await architecture() : undefined;
 	for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-download]")) {
-		const builds = JSON.parse(link.dataset.downloads ?? "{}") as Record<Platform, { name: string; url: string | null; intel?: string }>;
+		const builds = JSON.parse(link.dataset.downloads ?? "{}") as Record<Platform, Build>;
 		const build = system && builds[system];
 		if (!build?.url) continue;
-		link.href = (intel && build.intel) || build.url;
+		link.href = (system === "mac" && arch === "x86" && build.intel) || (system === "windows" && arch === "arm" && build.arm) || build.url;
 		link.querySelector("[data-download-label]")!.textContent = `Download for ${build.name}`;
 	}
 </script>

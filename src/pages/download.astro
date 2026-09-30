@@ -54,6 +54,16 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 											Intel Mac? Download this one
 										</a>
 									)}
+									{build.arm && (
+										<a class="other" href={build.arm} data-arm>
+											Windows on ARM? Download this one
+										</a>
+									)}
+									{build.msi && (
+										<a class="other" href={build.msi}>
+											For companies: MSI installer, for every user
+										</a>
+									)}
 								</>
 							) : (
 								<p class="soon">Not available yet</p>
@@ -120,16 +130,20 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 		card.querySelector("[data-get]")?.classList.replace("btn-quiet", "btn-ink");
 	}
 
-	// Chrome and Edge can tell an Intel Mac: offer its build first.
+	// Chrome and Edge can tell the processor: offer an Intel Mac or Windows on ARM its own build first.
 	const hints = (navigator as { userAgentData?: { getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }> } }).userAgentData;
 	hints
 		?.getHighEntropyValues(["architecture"])
 		.then(({ architecture }) => {
-			const get = document.querySelector<HTMLAnchorElement>('[data-platform="mac"] [data-get]');
-			const intel = document.querySelector<HTMLAnchorElement>('[data-platform="mac"] [data-intel]');
-			if (architecture !== "x86" || !get || !intel) return;
-			[get.href, intel.href] = [intel.href, get.href];
-			intel.textContent = "Apple Silicon Mac? Download this one";
+			const swap = (platform: string, other: string, when: string, label: string) => {
+				const get = document.querySelector<HTMLAnchorElement>(`[data-platform="${platform}"] [data-get]`);
+				const alt = document.querySelector<HTMLAnchorElement>(`[data-platform="${platform}"] [${other}]`);
+				if (architecture !== when || !get || !alt) return;
+				[get.href, alt.href] = [alt.href, get.href];
+				alt.textContent = label;
+			};
+			swap("mac", "data-intel", "x86", "Apple Silicon Mac? Download this one");
+			swap("windows", "data-arm", "arm", "Windows on an Intel or AMD PC? Download this one");
 		})
 		.catch(() => {});
 
@@ -142,7 +156,7 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 	// After a download, show that system's one-time step while it downloads.
 	for (const [build, guide] of [
 		['a[href$=".dmg"]', "#first-open"],
-		['a[href$=".exe"]', "#first-open-windows"],
+		['a[href$=".exe"], a[href$=".msi"]', "#first-open-windows"],
 	]) {
 		const section = document.querySelector<HTMLElement>(guide);
 		for (const link of document.querySelectorAll<HTMLAnchorElement>(`.platforms ${build}`)) {
