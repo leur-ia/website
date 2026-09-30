@@ -1,0 +1,59 @@
+---
+import Legal from "../layouts/Legal.astro";
+---
+
+<Legal
+	title="Privacy policy"
+	description="What the Leuria app sends, where, and what it keeps on your computer."
+	updated="30 September 2026"
+>
+	<p>
+		Leuria runs on your computer. There is no Leuria server and no Leuria account, and the app sends no usage data or analytics. This page
+		lists everything the app itself connects to, and why.
+	</p>
+
+	<h2>What Leuria keeps, on your computer only</h2>
+	<ul>
+		<li>The websites you connected, and the AI and model you chose for each.</li>
+		<li>Your sign-in to the AI apps you set up, and the keys of AI services you add.</li>
+		<li>The AI apps it downloaded for you.</li>
+	</ul>
+	<p>It keeps nothing of your conversations. All of this is in one folder, <code>.leuria</code> in your home folder.</p>
+
+	<h2>What Leuria connects to</h2>
+	<ul>
+		<li>
+			<strong>Updates.</strong> About every six hours, Leuria asks
+			<a href="https://github.com/leur-ia/leuria/releases">GitHub</a> whether a newer version exists, and downloads it if so. The request
+			carries nothing about you beyond what any download does, such as your IP address.
+		</li>
+		<li>
+			<strong>The list of AI apps.</strong> To show which AI apps you can use, Leuria reads a public list published by the
+			<a href="https://agentclientprotocol.com/registry">Agent Client Protocol registry</a>. When you pick one, Leuria downloads it from where
+			its publisher offers it (for example npm or GitHub).
+		</li>
+		<li>
+			<strong>The AI you choose.</strong> Your questions go to that AI, under your own account, as when you use it directly. Its own privacy
+			policy applies: for example <a href="https://openai.com/policies/privacy-policy/">OpenAI</a>,
+			<a href="https://www.anthropic.com/legal/privacy">Anthropic</a> or <a href="https://policies.google.com/privacy">Google</a>. With a model
+			on your computer, your questions never leave it.
+		</li>
+		<li>
+			<strong>The websites you connect.</strong> A website gets answers from your AI only after you approve it in Leuria's window, and only
+			while it stays connected. If it offers instructions for your AI (skills), Leuria downloads them from the address the site gives.
+		</li>
+	</ul>
+	<p>
+		Leuria sends nothing else to any other system, unless you ask it to. Its code is open source, so you can check this in the
+		<a href="https://github.com/leur-ia/leuria">repository</a>.
+	</p>
+
+	<h2>This website</h2>
+	<p>
+		leuria.eu has no cookies, no analytics and no trackers. It is hosted on GitHub Pages, which may log visits under
+		<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.
+	</p>
+
+	<h2>Questions</h2>
+	<p>Ask on <a href="https://github.com/leur-ia/leuria/issues">GitHub</a>.</p>
+</Legal>

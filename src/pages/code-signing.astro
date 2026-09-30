@@ -1,0 +1,35 @@
+---
+import Legal from "../layouts/Legal.astro";
+---
+
+<Legal
+	title="Code signing policy"
+	description="How Leuria's Windows builds are signed, by whom, and from what."
+	updated="30 September 2026"
+>
+	<p>
+		Free code signing provided by <a href="https://signpath.io">SignPath.io</a>, certificate by
+		<a href="https://signpath.org">SignPath Foundation</a>.
+	</p>
+
+	<h2>What is signed</h2>
+	<p>
+		The Leuria app for Windows and its installer. Every signed file is built from the public source code in
+		<a href="https://github.com/leur-ia/leuria">github.com/leur-ia/leuria</a> by GitHub's own build machines, from a tagged release. Nothing
+		built elsewhere is signed.
+	</p>
+
+	<h2>Team</h2>
+	<ul>
+		<li>Committers and reviewers: <a href="https://github.com/jbpin">Jean-Baptiste Pin</a></li>
+		<li>Approvers: <a href="https://github.com/jbpin">Jean-Baptiste Pin</a></li>
+	</ul>
+	<p>Every release is approved by hand before it is signed.</p>
+
+	<h2>Privacy</h2>
+	<p>
+		This program will not transfer any information to other networked systems unless specifically requested by the user or the person
+		installing or operating it, apart from what the <a href="/privacy-policy">privacy policy</a> lists: update checks, the list of AI apps,
+		the AI you choose and the websites you connect.
+	</p>
+</Legal>
