@@ -26,6 +26,8 @@ const imageUrl = new URL(image, Astro.site);
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const nav = [
+	// A page without the header's download button gets a Download link instead.
+	...(headerDownload ? [] : [{ href: "/download", label: "Download" }]),
 	{ href: "/#how", label: "How it works" },
 	{ href: "/#privacy", label: "Privacy" },
 	{ href: "/websites", label: "For websites" },
@@ -40,6 +42,7 @@ const nav = [
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<link rel="canonical" href={canonical} />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
@@ -70,7 +73,7 @@ const nav = [
 					<ul>
 						{
 							nav.map((item) => (
-								<li>
+								<li class:list={{ keep: item.href === "/download" }}>
 									<a href={item.href} aria-current={item.href === path ? "page" : undefined}>
 										{item.label}
 									</a>
@@ -208,7 +211,7 @@ const nav = [
 	}
 	/* Phones: the logo and the download; the sections are one scroll away. */
 	@media (max-width: 719px) {
-		.bar nav {
+		.bar nav li:not(.keep) {
 			display: none;
 		}
 		.header-action {

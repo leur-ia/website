@@ -10,15 +10,38 @@ import Icon from "./Icon.astro";
 interface Props {
 	variant?: "ink" | "quiet";
 	size?: "md" | "lg";
+	/** A small link under the button to the download page, for the other systems and versions. */
+	more?: boolean;
 }
 
-const { variant = "ink", size = "lg" } = Astro.props;
+const { variant = "ink", size = "lg", more = false } = Astro.props;
 ---
 
-<a class:list={["btn", `btn-${variant}`, `btn-${size}`]} href="/download" data-download data-downloads={JSON.stringify(downloads)}>
-	<Icon name="download" size={size === "lg" ? 20 : 18} />
-	<span data-download-label>Get Leuria</span>
-</a>
+<span class:list={["download", { "has-more": more }]}>
+	<a class:list={["btn", `btn-${variant}`, `btn-${size}`]} href="/download" data-download data-downloads={JSON.stringify(downloads)}>
+		<Icon name="download" size={size === "lg" ? 20 : 18} />
+		<span data-download-label>Get Leuria</span>
+	</a>
+	{more && <a class="more" href="/download">Other systems and versions</a>}
+</span>
+
+<style>
+	.download {
+		display: inline-grid;
+		justify-items: center;
+		gap: var(--space-2);
+	}
+	.more {
+		color: inherit;
+		opacity: 0.72;
+		font-size: 13px;
+		line-height: 18px;
+		text-underline-offset: 3px;
+	}
+	.more:hover {
+		opacity: 1;
+	}
+</style>
 
 <script>
 	import type { Platform } from "../data/site";

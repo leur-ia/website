@@ -82,7 +82,7 @@ const ais = [
 					</ul>
 				</div>
 				<div class="hero-actions">
-					<DownloadButton />
+					<DownloadButton more />
 					<a class="btn btn-link" href="#uses">See what it does <span class="down" aria-hidden="true">↓</span></a>
 				</div>
 			</div>
@@ -236,7 +236,7 @@ const ais = [
 			<h2 class="giant-2" data-float>Your AI<span class="punct">,</span><br />everywhere<span class="punct">.</span></h2>
 			<p class="zone-lead">Free and open source. On the websites you choose, and nowhere else.</p>
 			<div class="closing-actions">
-				<DownloadButton />
+				<DownloadButton more />
 				<a class="btn btn-link" href="/websites">Run a website? <Icon name="arrow-right" /></a>
 			</div>
 		</div>
@@ -415,7 +415,7 @@ const ais = [
 	.hero-actions {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
+		align-items: flex-start;
 		gap: var(--space-3);
 	}
 	.down {
@@ -860,6 +860,7 @@ const ais = [
 	.closing-actions {
 		display: flex;
 		flex-wrap: wrap;
+		align-items: flex-start;
 		justify-content: center;
 		gap: var(--space-3);
 		margin-top: var(--space-3);
