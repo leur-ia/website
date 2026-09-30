@@ -1,0 +1,30 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Page not found · Leuria" description="This page doesn't exist." noindex>
+	<section class="lost container">
+		<h1 class="heading-1">This page doesn't exist<span class="punct">.</span></h1>
+		<p class="lead">It may have moved. Start again from the home page, or go straight to the download.</p>
+		<p class="actions">
+			<a class="btn btn-ink" href="/">Home</a>
+			<a class="btn btn-quiet" href="/download">Download Leuria</a>
+		</p>
+	</section>
+</Base>
+
+<style>
+	.lost {
+		display: grid;
+		justify-items: start;
+		gap: var(--space-4);
+		max-width: calc(720px + var(--gutter) * 2);
+		padding-top: clamp(64px, 12vw, 160px);
+		padding-bottom: clamp(64px, 12vw, 160px);
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+	}
+</style>

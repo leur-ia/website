@@ -1,8 +1,9 @@
 ---
 import Icon from "../components/Icon.astro";
 import Logo from "../components/Logo.astro";
+import FirstOpen from "../components/FirstOpen.astro";
 import Ocean from "../components/Ocean.astro";
-import { BREW_INSTALL, downloads, type Platform } from "../data/site";
+import { BREW_INSTALL, SITE_JSON_LD, downloads, type Platform } from "../data/site";
 import Base from "../layouts/Base.astro";
 
 const platforms = Object.entries(downloads) as Array<[Platform, (typeof downloads)[Platform]]>;
@@ -10,8 +11,9 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 
 <Base
 	title="Download Leuria"
-	description="Download Leuria for Mac, Windows or Linux, and use your own AI on the websites you choose."
+	description="Download Leuria, free and open source, and use your own AI (ChatGPT, Claude, Mistral or a model on your computer) on the websites you choose."
 	headerDownload={false}
+	jsonLd={SITE_JSON_LD}
 >
 	<Ocean intro={false} />
 	<section class="download atmosphere">
@@ -48,6 +50,7 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 				}
 			</ul>
 			{platforms.every(([, build]) => !build.url) && <p class="note muted">The first builds are on their way. Check back soon.</p>}
+			<p class="note muted small">How we sign our builds: <a href="/code-signing">code signing policy</a>.</p>
 
 			<div class="brew card" data-float="heavy">
 				<p class="brew-title">Prefer Homebrew<span class="punct">?</span></p>
@@ -58,6 +61,9 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 			</div>
 		</div>
 	</section>
+
+	<FirstOpen system="mac" />
+	<FirstOpen system="windows" />
 
 	<section class="section" aria-labelledby="next-title">
 		<div class="container">
@@ -70,8 +76,8 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 					<span class="n">1</span>
 					<h3 class="heading-3">Open Leuria</h3>
 					<p class="muted">
-						Drag it to Applications and open it. The first time, your Mac asks you to confirm: open System Settings, then Privacy &amp;
-						Security, and click “Open Anyway”. It then stays in the background, ready for the sites you connect.
+						Install it and open it. The first time, your computer asks you to <a href="#first-open" data-first-open>allow it once</a>. It
+						then stays in the background, ready for the sites you connect.
 					</p>
 				</li>
 				<li class="card" data-float>
@@ -112,6 +118,28 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 			intel.textContent = "Apple Silicon Mac? Download this one";
 		})
 		.catch(() => {});
+
+	// Show only the visitor's own "allow it once" steps, when we know their system.
+	if (system === "mac" || system === "windows") {
+		for (const section of document.querySelectorAll<HTMLElement>("[data-system]")) section.hidden = section.dataset.system !== system;
+		if (system === "windows") document.querySelector<HTMLAnchorElement>("[data-first-open]")?.setAttribute("href", "#first-open-windows");
+	}
+
+	// After a download, show that system's one-time step while it downloads.
+	for (const [build, guide] of [
+		['a[href$=".dmg"]', "#first-open"],
+		['a[href$=".exe"]', "#first-open-windows"],
+	]) {
+		const section = document.querySelector<HTMLElement>(guide);
+		for (const link of document.querySelectorAll<HTMLAnchorElement>(`.platforms ${build}`)) {
+			link.addEventListener("click", () => {
+				if (!section) return;
+				section.hidden = false;
+				section.classList.add("is-downloading");
+				setTimeout(() => section.scrollIntoView({ block: "start" }), 400);
+			});
+		}
+	}
 
 	const copy = document.querySelector<HTMLButtonElement>("[data-brew-copy]");
 	copy?.addEventListener("click", async () => {
@@ -252,6 +280,9 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 	}
 	.note {
 		text-align: center;
+	}
+	.small {
+		font-size: 14px;
 	}
 
 	.next {

@@ -4,6 +4,7 @@ import HeroScene from "../components/HeroScene.astro";
 import Icon from "../components/Icon.astro";
 import Ocean from "../components/Ocean.astro";
 import TryIt from "../components/TryIt.astro";
+import { SITE_JSON_LD } from "../data/site";
 import Base from "../layouts/Base.astro";
 
 const uses = [
@@ -51,6 +52,7 @@ const ais = [
 	description="Leuria connects your own AI (ChatGPT, Claude, or a model on your computer) to the websites you choose. They ask first, and they never see your files."
 	headerDownload={false}
 	immersive
+	jsonLd={SITE_JSON_LD}
 >
 	<Ocean />
 

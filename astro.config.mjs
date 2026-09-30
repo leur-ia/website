@@ -1,7 +1,9 @@
+import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 
 export default defineConfig({
 	site: "https://leuria.eu",
+	integrations: [sitemap({ filter: (page) => !page.endsWith("/404/") })],
 	fonts: [
 		{
 			name: "Plus Jakarta Sans",

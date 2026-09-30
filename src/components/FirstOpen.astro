@@ -1,0 +1,417 @@
+---
+/**
+ * The one-time step to allow Leuria. It isn't registered with Apple, nor
+ * signed for Windows yet, so the system warns the first time: on a Mac the
+ * visitor allows it in System Settings, on Windows they click through
+ * SmartScreen. Each step shows a drawing of what the system shows, with
+ * the thing to click marked; the words carry the whole step on their own.
+ */
+import Logo from "./Logo.astro";
+
+interface Props {
+	system: "mac" | "windows";
+}
+
+const { system } = Astro.props;
+
+/** Opens System Settings at Privacy & Security (the browser asks first). */
+const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.security";
+---
+
+{system === "mac" && (
+<section class="section first-open" id="first-open" data-system="mac" aria-labelledby="first-open-title">
+	<div class="container">
+		<div class="section-head">
+			<p class="eyebrow">First time on a Mac</p>
+			<h2 class="heading-1" id="first-open-title">Allow Leuria once<span class="punct">,</span> in three clicks</h2>
+			<p class="lead">
+				Leuria is free and not registered with Apple, so your Mac can't check it and blocks it the first time. You allow it once, and it
+				opens normally from then on.
+			</p>
+		</div>
+
+		<ol class="steps">
+			<li class="step card" data-float>
+				<div class="shot" aria-hidden="true">
+					<div class="alert">
+						<span class="alert-icon"><Logo size={30} wordmark={false} /></span>
+						<p class="alert-title">“Leuria” Not Opened</p>
+						<p class="alert-text">Apple could not verify “Leuria” is free of malware…</p>
+						<span class="mac-btn is-target">Done</span>
+						<span class="mac-btn">Move to Trash</span>
+					</div>
+				</div>
+				<div class="words">
+					<span class="n">1</span>
+					<h3 class="heading-3">Open Leuria, then click Done</h3>
+					<p class="muted">
+						Drag Leuria to Applications and open it. Your Mac says it can't open it: click <strong>Done</strong>, not Move to Trash.
+					</p>
+				</div>
+			</li>
+
+			<li class="step card" data-float>
+				<div class="shot" aria-hidden="true">
+					<div class="settings">
+						<div class="side">
+							<span class="side-row"></span>
+							<span class="side-row"></span>
+							<span class="side-row is-on">Privacy &amp; Security</span>
+							<span class="side-row"></span>
+						</div>
+						<div class="pane">
+							<p class="pane-title">Security</p>
+							<p class="pane-text">“Leuria” was blocked to protect your Mac.</p>
+							<span class="mac-btn is-target">Open Anyway</span>
+						</div>
+					</div>
+				</div>
+				<div class="words">
+					<span class="n">2</span>
+					<h3 class="heading-3">Click Open Anyway in Settings</h3>
+					<p class="muted">
+						Open System Settings, then <strong>Privacy &amp; Security</strong>. Scroll down to Security and click <strong>Open Anyway</strong>
+						next to Leuria.
+					</p>
+					<a class="btn-link" href={PRIVACY_SETTINGS}>Open Privacy &amp; Security</a>
+				</div>
+			</li>
+
+			<li class="step card" data-float>
+				<div class="shot" aria-hidden="true">
+					<div class="alert">
+						<span class="alert-icon"><Logo size={30} wordmark={false} /></span>
+						<p class="alert-title">Open “Leuria”?</p>
+						<p class="alert-text">Only open it if you trust where it came from.</p>
+						<span class="mac-btn">Move to Trash</span>
+						<span class="mac-btn is-target">Open Anyway</span>
+					</div>
+				</div>
+				<div class="words">
+					<span class="n">3</span>
+					<h3 class="heading-3">Confirm, and you're done</h3>
+					<p class="muted">
+						Your Mac asks once more: click <strong>Open Anyway</strong>, then use your password or Touch ID. Leuria opens, and you won't see
+						this again.
+					</p>
+				</div>
+			</li>
+		</ol>
+	</div>
+</section>
+)}
+
+{system === "windows" && (
+<section class="section first-open" id="first-open-windows" data-system="windows" aria-labelledby="first-open-windows-title">
+	<div class="container">
+		<div class="section-head">
+			<p class="eyebrow">First time on Windows</p>
+			<h2 class="heading-1" id="first-open-windows-title">Allow Leuria once<span class="punct">,</span> in two clicks</h2>
+			<p class="lead">
+				Leuria is free and new, so Windows doesn't know it yet and warns you the first time. You allow it once, and it opens normally from
+				then on.
+			</p>
+		</div>
+
+		<ol class="steps">
+			<li class="step card" data-float>
+				<div class="shot" aria-hidden="true">
+					<div class="bubble">
+						<p class="bubble-file">Leuria-windows-setup.exe</p>
+						<p class="alert-text">isn't commonly downloaded. Make sure you trust it before you open it.</p>
+						<div class="bubble-actions">
+							<span class="mac-btn">Delete</span>
+							<span class="mac-btn is-target">Keep</span>
+						</div>
+					</div>
+				</div>
+				<div class="words">
+					<span class="n">1</span>
+					<h3 class="heading-3">Keep the download</h3>
+					<p class="muted">
+						If your browser says the file isn't commonly downloaded, choose <strong>Keep</strong>. In Edge, click the <strong>…</strong> next
+						to it first, and then <strong>Keep anyway</strong>.
+					</p>
+				</div>
+			</li>
+
+			<li class="step card" data-float>
+				<div class="shot" aria-hidden="true">
+					<div class="smartscreen">
+						<p class="ss-title">Windows protected your PC</p>
+						<p class="ss-text">Microsoft Defender SmartScreen prevented an unrecognized app from starting.</p>
+						<span class="ss-link is-target">More info</span>
+						<div class="ss-actions">
+							<span class="ss-btn">Don't run</span>
+						</div>
+					</div>
+				</div>
+				<div class="words">
+					<span class="n">2</span>
+					<h3 class="heading-3">Open it, then click More info</h3>
+					<p class="muted">
+						Open the file you downloaded. Windows shows a blue window: click <strong>More info</strong>, not Don't run.
+					</p>
+				</div>
+			</li>
+
+			<li class="step card" data-float>
+				<div class="shot" aria-hidden="true">
+					<div class="smartscreen">
+						<p class="ss-title">Windows protected your PC</p>
+						<p class="ss-text">App: Leuria-windows-setup.exe<br />Publisher: Unknown publisher</p>
+						<div class="ss-actions">
+							<span class="ss-btn is-target">Run anyway</span>
+							<span class="ss-btn">Don't run</span>
+						</div>
+					</div>
+				</div>
+				<div class="words">
+					<span class="n">3</span>
+					<h3 class="heading-3">Click Run anyway</h3>
+					<p class="muted">
+						Click <strong>Run anyway</strong>. Leuria installs for you alone, without asking for an administrator, and opens. You won't see
+						this again.
+					</p>
+				</div>
+			</li>
+		</ol>
+	</div>
+</section>
+)}
+
+<style>
+	.first-open {
+		scroll-margin-top: 24px;
+	}
+	.first-open.is-downloading .eyebrow::after {
+		content: " · While it downloads";
+	}
+	.steps {
+		display: grid;
+		gap: var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	@media (min-width: 860px) {
+		.steps {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+	.step {
+		display: grid;
+		grid-template-rows: auto 1fr;
+		overflow: hidden;
+		border-radius: var(--radius-5);
+	}
+	.words {
+		display: grid;
+		align-content: start;
+		gap: var(--space-2);
+		padding: var(--space-5);
+	}
+	.words strong {
+		color: var(--text);
+		font-weight: 700;
+	}
+	.words .btn-link {
+		justify-self: start;
+		margin-top: var(--space-1);
+	}
+	.n {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		margin-bottom: var(--space-1);
+		border-radius: 50%;
+		background: var(--accent-soft);
+		color: var(--accent-text);
+		font-weight: 800;
+	}
+
+	/* The drawings: a calm, simplified Mac, sized in px so they read the same everywhere. */
+	.shot {
+		display: grid;
+		place-items: center;
+		min-height: 216px;
+		padding: var(--space-5);
+		background:
+			radial-gradient(60% 80% at 0% 0%, var(--atmo-blush), transparent 70%),
+			radial-gradient(60% 80% at 100% 100%, var(--atmo-ice), transparent 70%),
+			var(--surface-sunken);
+		font-size: 12px;
+		line-height: 16px;
+	}
+	.alert {
+		display: grid;
+		justify-items: center;
+		gap: 6px;
+		width: 200px;
+		padding: 16px 14px 14px;
+		border-radius: 14px;
+		background: var(--surface);
+		box-shadow: var(--shadow-4), 0 0 0 1px var(--border);
+		text-align: center;
+	}
+	.alert-icon {
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		margin-bottom: 2px;
+		border-radius: 10px;
+		background: #eef0f7;
+	}
+	.alert-icon :global(.logo) {
+		color: #14172b;
+	}
+	.alert-title {
+		font-weight: 700;
+	}
+	.alert-text {
+		margin-bottom: 4px;
+		color: var(--text-muted);
+		font-size: 11px;
+		line-height: 14px;
+	}
+	.mac-btn {
+		display: block;
+		width: 100%;
+		padding: 4px 8px;
+		border-radius: 7px;
+		background: var(--surface-sunken);
+		box-shadow: 0 0 0 1px var(--border);
+		font-weight: 600;
+		text-align: center;
+	}
+	.mac-btn.is-target {
+		background: var(--accent);
+		color: #fff;
+		box-shadow: 0 0 0 3px var(--accent-soft);
+		animation: point 1.6s var(--easing-standard) infinite alternate;
+	}
+	@keyframes point {
+		to {
+			box-shadow: 0 0 0 6px var(--accent-soft);
+		}
+	}
+	.settings {
+		display: grid;
+		grid-template-columns: 84px 1fr;
+		width: min(100%, 260px);
+		min-height: 140px;
+		overflow: hidden;
+		border-radius: 12px;
+		background: var(--surface);
+		box-shadow: var(--shadow-4), 0 0 0 1px var(--border);
+	}
+	.side {
+		display: grid;
+		align-content: start;
+		gap: 6px;
+		padding: 12px 8px;
+		background: var(--surface-sunken);
+	}
+	.side-row {
+		height: 10px;
+		border-radius: 4px;
+		background: var(--border);
+	}
+	.side-row.is-on {
+		height: auto;
+		padding: 3px 5px;
+		background: var(--accent);
+		color: #fff;
+		font-size: 10px;
+		line-height: 12px;
+		font-weight: 600;
+	}
+	.pane {
+		display: grid;
+		align-content: end;
+		justify-items: start;
+		gap: 6px;
+		padding: 12px;
+	}
+	.pane-title {
+		font-weight: 700;
+	}
+	.pane-text {
+		color: var(--text-muted);
+		font-size: 11px;
+		line-height: 14px;
+	}
+	.bubble {
+		display: grid;
+		gap: 6px;
+		width: 230px;
+		padding: 14px;
+		border-radius: 10px;
+		background: var(--surface);
+		box-shadow: var(--shadow-4), 0 0 0 1px var(--border);
+	}
+	.bubble-file {
+		font-weight: 700;
+	}
+	.bubble-actions {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 6px;
+	}
+	/* SmartScreen is always this blue, in light and dark alike. */
+	.smartscreen {
+		display: grid;
+		justify-items: start;
+		gap: 8px;
+		width: 240px;
+		padding: 16px;
+		background: #1f5fa8;
+		color: #fff;
+		box-shadow: var(--shadow-4);
+	}
+	.ss-title {
+		font-size: 15px;
+		line-height: 20px;
+		font-weight: 700;
+	}
+	.ss-text {
+		font-size: 11px;
+		line-height: 15px;
+		opacity: 0.9;
+	}
+	.ss-link {
+		padding: 1px 4px;
+		border-radius: 4px;
+		font-weight: 600;
+		text-decoration: underline;
+	}
+	.ss-btn {
+		padding: 4px 12px;
+		border: 1px solid rgb(255 255 255 / 0.7);
+		font-weight: 600;
+	}
+	.ss-actions {
+		display: flex;
+		justify-self: stretch;
+		justify-content: flex-end;
+		gap: 6px;
+		margin-top: 4px;
+	}
+	.smartscreen .is-target {
+		background: #fff;
+		color: #1f5fa8;
+		box-shadow: 0 0 0 3px rgb(255 255 255 / 0.35);
+		animation: point-light 1.6s var(--easing-standard) infinite alternate;
+	}
+	@keyframes point-light {
+		to {
+			box-shadow: 0 0 0 6px rgb(255 255 255 / 0.35);
+		}
+	}
+	.pane .mac-btn {
+		width: auto;
+		padding: 4px 12px;
+	}
+</style>
