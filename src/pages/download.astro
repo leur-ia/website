@@ -24,6 +24,20 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 				<p class="lead reveal" style="animation-delay: 120ms">Free and open source. For your computer, not your phone.</p>
 			</div>
 
+			<div class="phone card" data-float="heavy">
+				<div class="phone-words">
+					<p class="phone-title">On a phone<span class="punct">?</span></p>
+					<p class="muted">
+						Leuria works on a Mac or a Windows PC, not on phones or tablets yet. Here it is on a shop that answers with your AI and fills in your
+						order from a message.
+					</p>
+				</div>
+				<video src="/video/leuria-demo.mp4" poster="/video/leuria-demo.jpg" autoplay muted loop playsinline width="720" height="1440">
+					A shop answering a question and filling in an order with the visitor's own AI.
+				</video>
+				<button type="button" class="btn btn-ink" data-send hidden>Send this page to my computer</button>
+			</div>
+
 			<ul class="platforms">
 				{
 					platforms.map(([id, build], i) => (
@@ -141,6 +155,13 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 		}
 	}
 
+	// On a phone: send this page to the computer where Leuria will run.
+	const send = document.querySelector<HTMLButtonElement>("[data-send]");
+	if (send && typeof navigator.share === "function") {
+		send.hidden = false;
+		send.addEventListener("click", () => void navigator.share({ title: "Download Leuria", url: location.href }).catch(() => undefined));
+	}
+
 	const copy = document.querySelector<HTMLButtonElement>("[data-brew-copy]");
 	copy?.addEventListener("click", async () => {
 		const label = copy.querySelector("[data-brew-label]")!;
@@ -156,6 +177,40 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 </script>
 
 <style>
+	/* Only on phones and tablets, where Leuria doesn't run. */
+	.phone {
+		display: none;
+	}
+	@media (hover: none) and (pointer: coarse) {
+		.phone {
+			display: grid;
+			justify-items: center;
+			gap: var(--space-4);
+			padding: var(--space-5);
+			border-radius: var(--radius-5);
+			text-align: center;
+		}
+		.phone [hidden] {
+			display: none;
+		}
+	}
+	.phone-words {
+		display: grid;
+		gap: var(--space-2);
+	}
+	.phone-title {
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 28px;
+	}
+	.phone video {
+		width: 100%;
+		max-width: 320px;
+		height: auto;
+		border-radius: var(--radius-4);
+		box-shadow: var(--shadow-3), 0 0 0 1px var(--border);
+		background: #f3efe8;
+	}
 	.other {
 		color: var(--text-muted);
 		font-size: 13px;
