@@ -82,10 +82,10 @@ const reasons = [
 			</div>
 			<figure class="code card" data-float="heavy">
 				<figcaption>shop.js</figcaption>
-				<pre><code><span class="k">import</span> {"{"} bridge, browserAI, createLeuria {"}"} <span class="k">from</span> <span class="s">"@leuria/client"</span>
+				<pre><code><span class="k">import</span> {"{"} createAI, leuria, promptAPI {"}"} <span class="k">from</span> <span class="s">"@leuria/client"</span>
 <span class="k">import</span> {"{"} setDefaultClient {"}"} <span class="k">from</span> <span class="s">"@leuria/connect"</span>
 
-<span class="k">const</span> ai = createLeuria({"{"} providers: [bridge(), browserAI()] {"}"})
+<span class="k">const</span> ai = createAI({"{"} providers: [leuria(), promptAPI()] {"}"})
 setDefaultClient(ai)   <span class="c">// &lt;leuria-connect-button&gt; uses it</span>
 
 <span class="k">const</span> answer = <span class="k">await</span> ai.chat({"{"}
