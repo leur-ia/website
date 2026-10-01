@@ -1,6 +1,9 @@
 /** The developer portal, for site owners who want to add Leuria. */
 export const DEVELOPERS_URL = "https://leuria.dev";
 
+/** Google Analytics, loaded only after the visitor says yes (see Consent.astro). */
+export const ANALYTICS_ID = "G-MCHQ15M7WJ";
+
 export type Platform = "mac" | "windows" | "linux";
 
 /** Where published builds live: the latest GitHub release, under stable names. */

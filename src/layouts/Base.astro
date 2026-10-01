@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 
+import Consent from "../components/Consent.astro";
 import DownloadButton from "../components/DownloadButton.astro";
 import Logo from "../components/Logo.astro";
 import { DEVELOPERS_URL } from "../data/site";
@@ -114,10 +115,12 @@ const nav = [
 			</div>
 			<div class="container">
 				<p class="footer-legal muted">
-					Leuria is open source, under the Apache 2.0 license. <a href="/privacy-policy">Privacy policy</a> · <a href="/code-signing">Code signing policy</a>
+					Leuria is open source, under the Apache 2.0 license. <a href="/privacy-policy">Privacy policy</a> · <a href="/code-signing">Code signing policy</a> ·
+					<button type="button" class="footer-link" data-consent-open>Visit counting</button>
 				</p>
 			</div>
 		</footer>
+		<Consent />
 	</body>
 </html>
 
@@ -258,6 +261,15 @@ const nav = [
 	}
 	.site-footer nav a:hover {
 		color: var(--text);
+	}
+	.footer-link {
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-decoration: underline;
+		cursor: pointer;
 	}
 	.footer-legal {
 		margin-top: var(--space-7);

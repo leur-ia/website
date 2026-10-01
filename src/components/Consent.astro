@@ -1,0 +1,128 @@
+---
+/**
+ * Visit counting, only with the visitor's yes. Nothing from Google loads
+ * before it: no script, no cookie. The answer is kept in this browser
+ * (localStorage), and "Visit counting" in the footer asks again.
+ */
+import { ANALYTICS_ID } from "../data/site";
+---
+
+<div class="consent" data-consent hidden role="region" aria-label="Visit counting">
+	<p>
+		<strong>Can we count your visit?</strong>
+		We'd use Google Analytics to see which pages help, and only if you say yes.
+		<a href="/privacy-policy#this-website">Details</a>
+	</p>
+	<div class="consent-actions">
+		<button type="button" class="btn btn-quiet" data-consent-answer="no">No thanks</button>
+		<button type="button" class="btn btn-quiet" data-consent-answer="yes">Yes, count it</button>
+	</div>
+</div>
+
+<script is:inline define:vars={{ id: ANALYTICS_ID }}>
+	(() => {
+		const KEY = "leuria-analytics";
+		const read = () => {
+			try {
+				return localStorage.getItem(KEY);
+			} catch {
+				return null;
+			}
+		};
+		const write = (value) => {
+			try {
+				localStorage.setItem(KEY, value);
+			} catch {
+				// private window: asked again next visit
+			}
+		};
+		let loaded = false;
+		const load = () => {
+			if (loaded) return;
+			loaded = true;
+			window.dataLayer = window.dataLayer || [];
+			window.gtag = function () {
+				window.dataLayer.push(arguments);
+			};
+			gtag("consent", "default", { analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+			gtag("js", new Date());
+			gtag("config", id);
+			const script = document.createElement("script");
+			script.async = true;
+			script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+			document.head.appendChild(script);
+		};
+		const forget = () => {
+			window[`ga-disable-${id}`] = true;
+			if (window.gtag) gtag("consent", "update", { analytics_storage: "denied" });
+			// Remove the cookies Google set, on this domain and its parent.
+			for (const cookie of document.cookie.split(";")) {
+				const name = cookie.split("=")[0].trim();
+				if (!name.startsWith("_ga")) continue;
+				for (const domain of ["", `; domain=${location.hostname}`, `; domain=.${location.hostname.replace(/^www\./, "")}`]) {
+					document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domain}`;
+				}
+			}
+		};
+
+		const banner = document.querySelector("[data-consent]");
+		const ask = () => {
+			banner.hidden = false;
+		};
+		banner.addEventListener("click", (event) => {
+			const answer = event.target.closest("[data-consent-answer]")?.dataset.consentAnswer;
+			if (!answer) return;
+			write(answer);
+			banner.hidden = true;
+			if (answer === "yes") {
+				window[`ga-disable-${id}`] = false;
+				load();
+			} else {
+				forget();
+			}
+		});
+		document.addEventListener("click", (event) => {
+			if (event.target.closest("[data-consent-open]")) ask();
+		});
+
+		const answer = read();
+		if (answer === "yes") load();
+		else if (answer !== "no") ask();
+	})();
+</script>
+
+<style>
+	.consent {
+		position: fixed;
+		inset: auto var(--gutter) var(--gutter);
+		z-index: 60;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-3) var(--space-5);
+		max-width: 720px;
+		margin: 0 auto;
+		padding: var(--space-4) var(--space-5);
+		border-radius: var(--radius-lg, 16px);
+		background: var(--surface);
+		color: var(--text);
+		box-shadow: var(--shadow-4);
+		font-size: 14px;
+		line-height: 20px;
+	}
+	.consent[hidden] {
+		display: none;
+	}
+	.consent p {
+		flex: 1 1 280px;
+		margin: 0;
+	}
+	.consent a {
+		color: var(--text-muted);
+	}
+	.consent-actions {
+		display: flex;
+		gap: var(--space-2);
+		margin-left: auto;
+	}
+</style>

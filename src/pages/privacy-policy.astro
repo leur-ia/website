@@ -5,7 +5,7 @@ import Legal from "../layouts/Legal.astro";
 <Legal
 	title="Privacy policy"
 	description="What the Leuria app sends, where, and what it keeps on your computer."
-	updated="30 September 2026"
+	updated="1 October 2026"
 >
 	<p>
 		Leuria runs on your computer. There is no Leuria server and no Leuria account, and the app sends no usage data or analytics. This page
@@ -48,12 +48,31 @@ import Legal from "../layouts/Legal.astro";
 		<a href="https://github.com/leur-ia/leuria">repository</a>.
 	</p>
 
-	<h2>This website</h2>
+	<h2 id="this-website">This website</h2>
 	<p>
-		leuria.eu has no cookies, no analytics and no trackers. It is hosted on GitHub Pages, which may log visits under
+		This section covers leuria.eu, the developer site leuria.dev and the demos on demo.leuria.dev. Each asks before counting your visit. If you say yes, it loads Google Analytics, which sets cookies and sends Google the pages
+		you view, roughly where you are and what device you use, so we can see which pages help. Nothing is used for advertising. If you say
+		no, Google is never contacted and no cookie is set. Your answer is kept in your browser, for each site, and you can change it any time with
+		<button type="button" class="inline-link" data-consent-open>Visit counting</button> at the bottom of the page. See
+		<a href="https://policies.google.com/privacy">Google's privacy policy</a>.
+	</p>
+	<p>
+		The sites are hosted on GitHub Pages, which may log visits under
 		<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.
 	</p>
 
 	<h2>Questions</h2>
 	<p>Ask on <a href="https://github.com/leur-ia/leuria/issues">GitHub</a>.</p>
 </Legal>
+
+<style>
+	.inline-link {
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+</style>
