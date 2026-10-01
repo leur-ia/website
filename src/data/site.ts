@@ -11,7 +11,7 @@ const LATEST = "https://github.com/leur-ia/leuria/releases/latest/download";
  * published: the site then says it isn't available yet instead of
  * linking to nothing. On Mac, `url` is for Apple Silicon (every Mac since
  * late 2020) and `intel` for the older ones. On Windows, `url` is for x64
- * PCs, `arm` for Windows on ARM, and `msi` for companies installing it for
+ * PCs, `arm` for Windows on ARM, and `msi` and `armMsi` for companies installing it for
  * everyone.
  */
 export interface Build {
@@ -20,6 +20,7 @@ export interface Build {
 	intel?: string;
 	arm?: string;
 	msi?: string;
+	armMsi?: string;
 }
 
 export const downloads: Record<Platform, Build> = {
@@ -29,6 +30,7 @@ export const downloads: Record<Platform, Build> = {
 		url: `${LATEST}/Leuria-windows-setup.exe`,
 		arm: `${LATEST}/Leuria-windows-arm-setup.exe`,
 		msi: `${LATEST}/Leuria-windows.msi`,
+		armMsi: `${LATEST}/Leuria-windows-arm.msi`,
 	},
 	linux: { name: "Linux", url: null },
 };
