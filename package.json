@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
-    "@leuria/client": "^0.1.0",
-    "@leuria/connect": "^0.1.0",
+    "@leuria/client": "^0.1.4",
+    "@leuria/connect": "^0.1.4",
     "astro": "^7.3.5"
   }
 }

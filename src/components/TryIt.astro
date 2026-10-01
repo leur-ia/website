@@ -38,10 +38,10 @@ const suggestions = ["What does Leuria do, in two sentences?", "Can a website se
 </div>
 
 <script>
-	import { bridge, createLeuria, NoProviderError, type ToolDefinition } from "@leuria/client";
+	import { createAI, leuria, NoProviderError, type ToolDefinition } from "@leuria/client";
 	import { setDefaultClient } from "@leuria/connect";
 
-	const ai = createLeuria({ providers: [bridge({ app: "Leuria" })] });
+	const ai = createAI({ providers: [leuria({ app: "Leuria" })] });
 	setDefaultClient(ai);
 
 	/** The page's words, for the visitor's AI: the one thing it may read here. */
