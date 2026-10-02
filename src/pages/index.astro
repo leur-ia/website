@@ -244,6 +244,8 @@ const ais = [
 </Base>
 
 <script>
+	import { copyText } from "../scripts/browser";
+
 	// Hand the visitor a message for a site they'd like to see add Leuria. Nothing is sent from here.
 	const pitch = document.querySelector<HTMLElement>("[data-pitch]");
 	if (pitch) {
@@ -253,14 +255,8 @@ const ais = [
 		const share = pitch.querySelector<HTMLButtonElement>("[data-pitch-share]")!;
 		let reset = 0;
 		copy.addEventListener("click", async () => {
-			try {
-				await navigator.clipboard.writeText(text);
-				label.textContent = "Copied";
-			} catch {
-				// No clipboard here: select the words so the visitor can copy them.
-				getSelection()?.selectAllChildren(pitch.querySelector("[data-pitch-text]")!);
-				label.textContent = "Selected, copy it";
-			}
+			// No clipboard here: the words get selected so the visitor can copy them.
+			label.textContent = (await copyText(text, pitch.querySelector("[data-pitch-text]")!)) ? "Copied" : "Selected, copy it";
 			clearTimeout(reset);
 			reset = window.setTimeout(() => (label.textContent = "Copy the message"), 2400);
 		});

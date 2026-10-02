@@ -25,10 +25,9 @@ export type IconName = keyof typeof PATHS;
 interface Props {
 	name: IconName;
 	size?: number;
-	label?: string;
 }
 
-const { name, size = 18, label } = Astro.props;
+const { name, size = 18 } = Astro.props;
 ---
 
 <svg
@@ -41,6 +40,4 @@ const { name, size = 18, label } = Astro.props;
 	stroke-width="1.75"
 	stroke-linecap="round"
 	stroke-linejoin="round"
-	role={label ? "img" : undefined}
-	aria-label={label}
-	aria-hidden={label ? undefined : "true"}><path d={PATHS[name]}></path></svg>
+	aria-hidden="true"><path d={PATHS[name]}></path></svg>

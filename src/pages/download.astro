@@ -126,9 +126,10 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 </Base>
 
 <script>
+	import { architecture, copyText, platform } from "../scripts/browser";
+
 	// Put the visitor's own system first, and say so.
-	const ua = navigator.userAgent;
-	const system = /Mac OS X|Macintosh/.test(ua) && !/iPhone|iPad/.test(ua) ? "mac" : /Windows/.test(ua) ? "windows" : /Linux/.test(ua) && !/Android/.test(ua) ? "linux" : undefined;
+	const system = platform();
 	const card = system && document.querySelector<HTMLElement>(`[data-platform="${system}"]`);
 	if (card) {
 		card.classList.add("is-yours");
@@ -137,22 +138,18 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 	}
 
 	// Chrome and Edge can tell the processor: offer an Intel Mac or Windows on ARM its own build first.
-	const hints = (navigator as { userAgentData?: { getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }> } }).userAgentData;
-	hints
-		?.getHighEntropyValues(["architecture"])
-		.then(({ architecture }) => {
-			const swap = (platform: string, other: string, when: string, label: string) => {
-				const get = document.querySelector<HTMLAnchorElement>(`[data-platform="${platform}"] [data-get]`);
-				const alt = document.querySelector<HTMLAnchorElement>(`[data-platform="${platform}"] [${other}]`);
-				if (architecture !== when || !get || !alt) return;
-				[get.href, alt.href] = [alt.href, get.href];
-				alt.textContent = label;
-			};
-			// Only on the visitor's own system: an Apple Silicon Mac says "arm" too.
-			if (system === "mac") swap("mac", "data-intel", "x86", "Apple Silicon Mac? Download this one");
-			if (system === "windows") swap("windows", "data-arm", "arm", "Windows on an Intel or AMD PC? Download this one");
-		})
-		.catch(() => {});
+	void architecture().then((arch) => {
+		const swap = (platform: string, other: string, when: string, label: string) => {
+			const get = document.querySelector<HTMLAnchorElement>(`[data-platform="${platform}"] [data-get]`);
+			const alt = document.querySelector<HTMLAnchorElement>(`[data-platform="${platform}"] [${other}]`);
+			if (arch !== when || !get || !alt) return;
+			[get.href, alt.href] = [alt.href, get.href];
+			alt.textContent = label;
+		};
+		// Only on the visitor's own system: an Apple Silicon Mac says "arm" too.
+		if (system === "mac") swap("mac", "data-intel", "x86", "Apple Silicon Mac? Download this one");
+		if (system === "windows") swap("windows", "data-arm", "arm", "Windows on an Intel or AMD PC? Download this one");
+	});
 
 	// Show only the visitor's own "allow it once" steps, when we know their system.
 	if (system === "mac" || system === "windows") {
@@ -186,13 +183,8 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 	const copy = document.querySelector<HTMLButtonElement>("[data-brew-copy]");
 	copy?.addEventListener("click", async () => {
 		const label = copy.querySelector("[data-brew-label]")!;
-		try {
-			await navigator.clipboard.writeText(document.querySelector("[data-brew]")!.textContent!.trim());
-			label.textContent = "Copied";
-		} catch {
-			getSelection()?.selectAllChildren(document.querySelector("[data-brew]")!);
-			label.textContent = "Selected";
-		}
+		const brew = document.querySelector("[data-brew]")!;
+		label.textContent = (await copyText(brew.textContent!.trim(), brew)) ? "Copied" : "Selected";
 		setTimeout(() => (label.textContent = "Copy"), 2000);
 	});
 </script>

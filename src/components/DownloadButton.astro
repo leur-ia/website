@@ -45,27 +45,7 @@ const { variant = "ink", size = "lg", more = false } = Astro.props;
 
 <script>
 	import type { Build, Platform } from "../data/site";
-
-	function platform(): Platform | undefined {
-		const ua = navigator.userAgent;
-		if (/Mac OS X|Macintosh/.test(ua) && !/iPhone|iPad/.test(ua)) return "mac";
-		if (/Windows/.test(ua)) return "windows";
-		if (/Linux/.test(ua) && !/Android/.test(ua)) return "linux";
-		return undefined;
-	}
-
-	/**
-	 * The processor, where the browser says (Chrome and Edge): "x86" or "arm".
-	 * Safari doesn't, so a Mac gets the Apple Silicon build.
-	 */
-	async function architecture(): Promise<string | undefined> {
-		const data = (navigator as { userAgentData?: { getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }> } }).userAgentData;
-		try {
-			return (await data?.getHighEntropyValues(["architecture"]))?.architecture;
-		} catch {
-			return undefined;
-		}
-	}
+	import { architecture, platform } from "../scripts/browser";
 
 	const system = platform();
 	const arch = system === "mac" || system === "windows" ? await architecture() : undefined;
