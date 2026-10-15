@@ -1,7 +1,10 @@
 ---
-import Icon from "../components/Icon.astro";
-import Logo from "../components/Logo.astro";
+/**
+ * The download: one build per system, the visitor's own first; the one-time step their system asks for; then three steps.
+ * Same vocabulary as the home page: text left, flat bands, no ornament.
+ */
 import FirstOpen from "../components/FirstOpen.astro";
+import Icon from "../components/Icon.astro";
 import Ocean from "../components/Ocean.astro";
 import { BREW_INSTALL, SITE_JSON_LD, downloads, type Platform } from "../data/site";
 import Base from "../layouts/Base.astro";
@@ -11,38 +14,37 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 
 <Base
 	title="Download Leuria"
-	description="Download Leuria, free and open source, and use your own AI (ChatGPT, Claude, Mistral or a model on your computer) on the websites you choose."
+	description="Download Leuria, free and open source, for Mac or Windows. Use the AI you already have on the websites you choose: Claude Code, Codex, an API key, or a model on your computer."
 	headerDownload={false}
 	jsonLd={SITE_JSON_LD}
 >
 	<Ocean intro={false} />
-	<section class="download atmosphere">
-		<div class="container inner">
-			<div class="head" data-float>
-				<span class="app-icon reveal"><Logo size={64} wordmark={false} /></span>
-				<h1 class="display reveal" style="animation-delay: 60ms">Download Leuria</h1>
-				<p class="lead reveal" style="animation-delay: 120ms">Free and open source. For your computer, not your phone.</p>
-			</div>
 
-			<div class="phone card" data-float="heavy">
-				<div class="phone-words">
-					<p class="phone-title">On a phone<span class="punct">?</span></p>
-					<p class="muted">
-						Leuria works on a Mac or a Windows PC, not on phones or tablets yet. Here it is on a shop that answers with your AI and fills in your
-						order from a message.
-					</p>
-				</div>
-				<video src="/video/leuria-demo.mp4" poster="/video/leuria-demo.jpg" autoplay muted loop playsinline width="720" height="1440">
-					A shop answering a question and filling in an order with the visitor's own AI.
-				</video>
-				<button type="button" class="btn btn-ink" data-send hidden>Send this page to my computer</button>
-			</div>
+	<!-- 1 · The builds. -->
+	<section class="download" aria-labelledby="download-title" data-theme="light">
+		<div class="download-text">
+			<h1 id="download-title">Download Leuria<span class="punct">.</span></h1>
+			<p class="lede">Free and open source. A small app for your Mac or Windows PC, not your phone: it waits in the menu bar until a website needs your AI.</p>
+		</div>
 
-			<ul class="platforms">
-				{
-					platforms.map(([id, build], i) => (
-						<li data-float class="platform card reveal" data-platform={id} style={`animation-delay: ${180 + i * 60}ms`}>
-							<h2 class="heading-3">{build.name}</h2>
+		<div class="phone">
+			<p class="phone-title">On a phone<span class="punct">?</span></p>
+			<p class="muted">Leuria runs on a Mac or a Windows PC, not on phones or tablets yet. Here it is on a shop that answers with your AI and fills in your order from a message.</p>
+			<video src="/video/leuria-demo.mp4" poster="/video/leuria-demo.jpg" autoplay muted loop playsinline width="720" height="1440">
+				A shop answering a question and filling in an order with the visitor's own AI.
+			</video>
+			<button type="button" class="btn btn-ink" data-send hidden>Send this page to my computer</button>
+		</div>
+
+		<ul class="platforms bands">
+			{
+				platforms.map(([id, build]) => (
+					<li class="platform band" data-platform={id}>
+						<span class="band-tag">
+							<h2>{build.name}</h2>
+							<span class="yours">Your computer</span>
+						</span>
+						<span class="band-main">
 							{build.url ? (
 								<>
 									<a class="btn btn-quiet" href={build.url} data-get>
@@ -60,7 +62,7 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 										</a>
 									)}
 									{build.msi && (
-										<p class="other">
+										<span class="other">
 											For companies, an MSI for every user: <a href={build.msi}>Intel or AMD</a>
 											{build.armMsi && (
 												<>
@@ -68,60 +70,61 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 													<a href={build.armMsi}>ARM</a>
 												</>
 											)}
-										</p>
+										</span>
 									)}
 								</>
 							) : (
-								<p class="soon">Not available yet</p>
+								<span class="soon">Not available yet</span>
 							)}
-							<p class="yours">Your computer</p>
-						</li>
-					))
-				}
-			</ul>
-			{platforms.every(([, build]) => !build.url) && <p class="note muted">The first builds are on their way. Check back soon.</p>}
-			<p class="note muted small">How we sign our builds: <a href="/code-signing">code signing policy</a>.</p>
+						</span>
+					</li>
+				))
+			}
+		</ul>
+		{platforms.every(([, build]) => !build.url) && <p class="note">The first builds are on their way. Check back soon.</p>}
 
-			<div class="brew card" data-float="heavy">
-				<p class="brew-title">Prefer Homebrew<span class="punct">?</span></p>
-				<div class="brew-line">
-					<code data-brew>{BREW_INSTALL}</code>
-					<button type="button" class="btn btn-quiet" data-brew-copy><Icon name="copy" size={16} /><span data-brew-label>Copy</span></button>
-				</div>
+		<div class="brew">
+			<p class="brew-title">Prefer Homebrew<span class="punct">?</span></p>
+			<div class="brew-line">
+				<code data-brew>{BREW_INSTALL}</code>
+				<button type="button" class="btn btn-quiet" data-brew-copy><Icon name="copy" size={16} /><span data-brew-label>Copy</span></button>
 			</div>
 		</div>
+		<p class="note">How we sign our builds: <a href="/code-signing">code signing policy</a>.</p>
 	</section>
 
 	<FirstOpen system="mac" />
 	<FirstOpen system="windows" />
 
-	<section class="section" aria-labelledby="next-title">
-		<div class="container">
-			<div class="section-head">
-				<p class="eyebrow">After the download</p>
-				<h2 class="heading-1" id="next-title">Three steps<span class="punct">,</span> then you're set</h2>
-			</div>
-			<ol class="next">
-				<li class="card" data-float>
-					<span class="n">1</span>
-					<h3 class="heading-3">Open Leuria</h3>
-					<p class="muted">
-						Install it and open it. The first time, your computer asks you to <a href="#first-open" data-first-open>allow it once</a>. It
-						then stays in the background, ready for the sites you connect.
-					</p>
-				</li>
-				<li class="card" data-float>
-					<span class="n">2</span>
-					<h3 class="heading-3">Choose your AI</h3>
-					<p class="muted">An AI app you use (ChatGPT, Claude, Gemini…), a model on your computer, or an AI service with a key.</p>
-				</li>
-				<li class="card" data-float>
-					<span class="n">3</span>
-					<h3 class="heading-3">Connect a site</h3>
-					<p class="muted">Click “Connect your AI” on a site that offers it, and allow it in Leuria's window.</p>
-				</li>
-			</ol>
-		</div>
+	<!-- 2 · Then three steps. -->
+	<section class="next" aria-labelledby="next-title" data-theme="light">
+		<h2 id="next-title" class="two-tone"><span>Three steps,</span> <br />then you're set<span class="punct">.</span></h2>
+		<ol class="bands steps">
+			<li class="band">
+				<span class="band-tag">1</span>
+				<span class="band-main">
+					<span class="band-title">Open Leuria</span>
+					<span class="band-note">
+						Install it and open it. The first time, your computer asks you to <a href="#first-open" data-first-open>allow it once</a>. It then stays in the
+						background, ready for the sites you connect.
+					</span>
+				</span>
+			</li>
+			<li class="band">
+				<span class="band-tag">2</span>
+				<span class="band-main">
+					<span class="band-title">Choose your AI</span>
+					<span class="band-note">An agent you sign in to (Claude Code, Codex, Gemini CLI…), a model on your computer, or an AI service with a key.</span>
+				</span>
+			</li>
+			<li class="band">
+				<span class="band-tag">3</span>
+				<span class="band-main">
+					<span class="band-title">Connect a site</span>
+					<span class="band-note">Click “Connect your AI” on a site that offers it, and allow it in Leuria's window.</span>
+				</span>
+			</li>
+		</ol>
 	</section>
 </Base>
 
@@ -190,58 +193,170 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 </script>
 
 <style>
+	:root {
+		--margin: clamp(16px, 2.5vw, 32px);
+		--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+	}
+	.punct {
+		margin-left: -0.14em;
+	}
+	:global(main) > section {
+		position: relative;
+	}
+	:global(main) > section > * {
+		position: relative;
+		z-index: 2;
+	}
+	h1 {
+		font-size: clamp(34px, 3.6vw, 52px);
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		line-height: 1.05;
+	}
+	.next h2 {
+		font-size: clamp(36px, 4vw, 60px);
+		line-height: 1;
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+	}
+	.two-tone span:first-child {
+		color: var(--text-muted);
+	}
+
+	/* ---------- 1 · The builds ---------- */
+	.download {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 40px;
+		max-width: 1040px;
+		padding: clamp(48px, 8vh, 96px) var(--margin) clamp(64px, 10vh, 120px);
+	}
+	.download-text {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.lede {
+		font-size: var(--step-lead);
+		line-height: 1.4;
+		max-width: 52ch;
+	}
+
 	/* Only on phones and tablets, where Leuria doesn't run. */
 	.phone {
 		display: none;
 	}
 	@media (hover: none) and (pointer: coarse) {
 		.phone {
-			display: grid;
-			justify-items: center;
-			gap: var(--space-4);
-			padding: var(--space-5);
-			border-radius: var(--radius-5);
-			text-align: center;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 16px;
+			width: 100%;
+			padding: 20px;
+			border-radius: 14px;
+			background: var(--pearl-3);
 		}
 		.phone [hidden] {
 			display: none;
 		}
 	}
-	.phone-words {
-		display: grid;
-		gap: var(--space-2);
-	}
 	.phone-title {
 		font-weight: 700;
 		font-size: 20px;
-		line-height: 28px;
 	}
 	.phone video {
 		width: 100%;
 		max-width: 320px;
 		height: auto;
-		border-radius: var(--radius-4);
-		box-shadow: var(--shadow-3), 0 0 0 1px var(--border);
-		background: #f3efe8;
+		border-radius: 10px;
+		background: var(--pearl-2);
+	}
+
+	/* The bands: one per system, the visitor's own first. */
+	.bands {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		width: 100%;
+	}
+	.band {
+		display: grid;
+		grid-template-columns: 160px 1fr;
+		align-items: center;
+		column-gap: 24px;
+		min-height: 76px;
+		padding: 16px 20px;
+		border-radius: 8px;
+		background: var(--pearl-2);
+	}
+	.band:nth-child(even) {
+		background: var(--pearl-3);
+	}
+	.band-tag {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		font-size: 18px;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+	.band-tag h2 {
+		font-size: 20px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+	.band-main {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 10px 20px;
+	}
+	.platform.is-yours {
+		background: var(--lavender-3);
+	}
+	.yours {
+		display: none;
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--accent-text);
+	}
+	.is-yours .yours {
+		display: block;
 	}
 	.other {
 		color: var(--text-muted);
-		font-size: 13px;
+		font-size: 14px;
 	}
 	a.other:hover,
-	p.other a:hover {
+	.other a:hover {
 		color: var(--accent-text);
 	}
-	p.other a {
+	.other a {
 		color: inherit;
 	}
+	.soon {
+		color: var(--text-muted);
+		font-weight: 600;
+	}
+	.note {
+		font-size: 15px;
+		color: var(--text-muted);
+	}
+	.note a {
+		color: inherit;
+	}
+
 	.brew {
-		display: grid;
-		gap: var(--space-3);
-		justify-self: center;
-		width: min(560px, 100%);
-		padding: var(--space-5);
-		border-radius: var(--radius-5);
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		width: min(640px, 100%);
 	}
 	.brew-title {
 		font-weight: 700;
@@ -250,14 +365,14 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--space-3);
+		gap: 12px;
 	}
 	.brew code {
 		flex: 1;
 		min-width: 0;
-		padding: var(--space-2) var(--space-3);
-		border-radius: var(--radius-3);
-		background: var(--surface-sunken);
+		padding: 10px 14px;
+		border-radius: 8px;
+		background: var(--pearl-3);
 		font-size: 14px;
 		/* Keep "--cask" as two hyphens, never a joined dash. */
 		font-variant-ligatures: none;
@@ -265,125 +380,45 @@ const platforms = Object.entries(downloads) as Array<[Platform, (typeof download
 		overflow-wrap: anywhere;
 		user-select: all;
 	}
-	.download {
-		padding: clamp(56px, 9vw, 112px) 0;
+
+	/* ---------- 2 · Three steps ---------- */
+	.next {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 40px;
+		padding: clamp(96px, 12vh, 180px) var(--margin) clamp(48px, 8vh, 96px);
 	}
-	.inner {
-		display: grid;
-		gap: clamp(40px, 6vw, 56px);
+	.steps .band {
+		grid-template-columns: 56px 1fr;
+		align-items: start;
 	}
-	.head {
-		display: grid;
-		justify-items: center;
-		gap: var(--space-4);
-		text-align: center;
+	.steps .band-main {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
 	}
-	.app-icon {
-		display: grid;
-		place-items: center;
-		width: 104px;
-		height: 104px;
-		margin-bottom: var(--space-2);
-		border-radius: 24px;
-		background:
-			radial-gradient(70% 70% at 0% 0%, var(--atmo-blush), transparent 70%),
-			radial-gradient(70% 70% at 100% 0%, var(--atmo-ice), transparent 70%),
-			radial-gradient(70% 70% at 100% 100%, var(--atmo-mint), transparent 70%),
-			radial-gradient(70% 70% at 0% 100%, var(--atmo-lavender), transparent 70%),
-			#eef0f7;
-		box-shadow:
-			var(--shadow-4),
-			inset 0 0 0 1px rgb(255 255 255 / 0.6);
-	}
-	.app-icon :global(.logo) {
-		color: #14172b;
-	}
-	.platforms {
-		display: grid;
-		gap: var(--space-4);
-		width: 100%;
-		max-width: 920px;
-		margin: 0 auto;
-		padding: 0;
-		list-style: none;
-	}
-	@media (min-width: 760px) {
-		.platforms {
-			grid-template-columns: repeat(3, 1fr);
-		}
-		.platform {
-			min-height: 160px;
-		}
-	}
-	.platform {
-		position: relative;
-		display: grid;
-		align-content: space-between;
-		gap: var(--space-4);
-		padding: var(--space-5);
-		border-radius: var(--radius-5);
-	}
-	.platform.is-yours {
-		box-shadow:
-			var(--shadow-3),
-			0 0 0 2px var(--accent);
-	}
-	.yours {
-		display: none;
-		position: absolute;
-		top: var(--space-4);
-		right: var(--space-4);
-		padding: 2px var(--space-2);
-		border-radius: var(--radius-full);
-		background: var(--accent-soft);
-		color: var(--accent-text);
-		font-size: 12px;
+	.band-title {
+		font-size: 18px;
 		font-weight: 600;
 	}
-	.is-yours .yours {
-		display: block;
-	}
-	.soon {
-		display: inline-flex;
-		align-items: center;
-		min-height: var(--target-min);
+	.band-note {
+		font-size: 16px;
+		line-height: 1.4;
 		color: var(--text-muted);
-		font-weight: 600;
+		max-width: 60ch;
 	}
-	.note {
-		text-align: center;
-	}
-	.small {
-		font-size: 14px;
+	.band-note a {
+		color: var(--accent-text);
 	}
 
-	.next {
-		display: grid;
-		gap: var(--space-4);
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-	@media (min-width: 760px) {
-		.next {
-			grid-template-columns: repeat(3, 1fr);
-		}
-	}
-	.next li {
-		display: grid;
-		align-content: start;
-		gap: var(--space-2);
-		padding: var(--space-6) var(--space-5);
-	}
-	.n {
-		display: grid;
-		place-items: center;
-		width: 32px;
-		height: 32px;
-		margin-bottom: var(--space-2);
-		border-radius: 50%;
-		background: var(--accent-soft);
-		color: var(--accent-text);
-		font-weight: 800;
+	@media (max-width: 860px) {
+		.download { padding: 24px 16px 48px; gap: 28px; }
+		h1 { font-size: 9vw; }
+		.lede { font-size: 17px; }
+		.band { grid-template-columns: 1fr; row-gap: 10px; padding: 14px 16px; }
+		.band-tag { flex-direction: row; align-items: baseline; gap: 12px; }
+		.next { padding: 64px 16px 48px; gap: 28px; }
+		.steps .band { grid-template-columns: 32px 1fr; }
 	}
 </style>

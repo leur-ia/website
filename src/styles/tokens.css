@@ -2,6 +2,11 @@
 :root, [data-theme="light"] {
   --pearl-1: #fcfcfe;
   --pearl-2: #f7f7fb;
+  --pearl-3: #f1f2f7;
+  --pearl-4: #e9eaf2;
+  --sage-3: #e3f6ee;
+  --ice-3: #e4f1fa;
+  --step-lead: clamp(17px, 1.3vw, 20px);
   --pearl-6: #d6d8e5;
   --pearl-7: #c9ccdc;
   --pearl-8: #b4b8cd;
@@ -56,6 +61,11 @@
   color-scheme: dark;
   --pearl-1: #0d0e13;
   --pearl-2: #13141a;
+  --pearl-3: #1a1c25;
+  --pearl-4: #22242f;
+  --sage-3: #0f2a21;
+  --ice-3: #0f2231;
+  --step-lead: clamp(17px, 1.3vw, 20px);
   --pearl-6: #323443;
   --pearl-7: #404254;
   --pearl-8: #53566b;
@@ -111,6 +121,11 @@
     color-scheme: dark;
     --pearl-1: #0d0e13;
     --pearl-2: #13141a;
+    --pearl-3: #1a1c25;
+    --pearl-4: #22242f;
+    --sage-3: #0f2a21;
+    --ice-3: #0f2231;
+    --step-lead: clamp(17px, 1.3vw, 20px);
     --pearl-6: #323443;
     --pearl-7: #404254;
     --pearl-8: #53566b;

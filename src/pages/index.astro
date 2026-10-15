@@ -1,864 +1,930 @@
 ---
 import DownloadButton from "../components/DownloadButton.astro";
-import HeroScene from "../components/HeroScene.astro";
-import Icon from "../components/Icon.astro";
+import Logo from "../components/Logo.astro";
 import Ocean from "../components/Ocean.astro";
 import TryIt from "../components/TryIt.astro";
-import { SITE_JSON_LD } from "../data/site";
+import { downloads, SITE_JSON_LD } from "../data/site";
 import Base from "../layouts/Base.astro";
 
-const uses = [
-	{ title: "Ask a shop", text: "Describe what you want in your own words. Your AI searches the shop's products and explains its pick." },
-	{ title: "Ask the docs", text: "Get the answer from a product's documentation, with links to the pages it used." },
-	{ title: "Search by meaning", text: "Find the note or the recipe you mean, even when you forgot the words it used." },
+/**
+ * The argument, one claim per section, each with its proof:
+ *   1. Use the AI you already have on the websites you choose. → the real shop, on your AI, in sixteen seconds
+ *   2. Set up once, then it's one click per site.         → the Leuria window, four times along
+ *   3. Every site asks first; none sees your files.        → what a site can and can't do, in words
+ *   4. It works with the AI you have.                      → the AIs, by kind
+ *   5. This page runs on your AI: ask it.                  → the live question box
+ *   6. It's free. Get it.                                  → the download
+ */
+
+/** The clips the first screen cycles through: real sites on a real AI, recorded as is. */
+const clips = [
+	{ id: "shop", caption: "A shop: its assistant answers from the shop's own stock, and fills an order from a message.", alt: "Kiln & Co., a demo shop, connecting to the visitor's AI through Leuria, answering which mug is cheapest, and filling an order from a message" },
+	{ id: "docs", caption: "A documentation site: Ask AI answers from the docs, with links to the pages it used.", alt: "A Docusaurus documentation site with Ask AI: a question answered from the docs, with links to the pages" },
+	{ id: "home", caption: "A smart home: a decision model on your computer reads each command; your AI only speaks when words are needed.", alt: "Hearth, a smart home demo: a command read by a decision model on the visitor's computer, with its trace" },
 ];
 
-const gains = [
-	{
-		title: "Choose your AI",
-		text: "ChatGPT, Claude, Mistral, your company's AI or a model on your computer. The site doesn't pick for you, and you can switch any time.",
-	},
-	{
-		title: "Keep your data",
-		text: "Sites never see your files, your password or your AI account. Leuria keeps nothing of your conversations. With a model on your computer, nothing leaves it.",
-	},
-	{
-		title: "Stay sovereign",
-		text: "Pick a European AI, your company's own, or one that runs only on your computer. Leuria is open source, so anyone can check what it does.",
-	},
-	{
-		title: "Nothing without your yes",
-		text: "Every site asks first and shows what it can and can't do. You can disconnect it in one click.",
-	},
-	{
-		title: "Better answers",
-		text: "Sites often run a small model to keep their costs down. With Leuria, the answer comes from the AI you chose, the one you already trust.",
-	},
-];
+/** The four steps, each with what you actually see at that moment. */
+const clauses = ["First, get Leuria.", "Then pick your AI.", "Then a site asks.", "Then it answers, from your AI."];
 
-/** What a visitor sends to a site they'd like to see add Leuria. */
-const pitch =
-	"Hi! I'd love to use my own AI on your site. With Leuria, you can add AI features that run on your visitors' own AI, so you don't pay for it. It's free and open source: https://leuria.eu/websites";
-
-const ais = [
-	{ icon: "globe", title: "An AI app you use", text: "ChatGPT, Claude, Gemini… Sign in with the account you already have." },
-	{ icon: "computer", title: "A model on your computer", text: "With LM Studio or Ollama. Private and free: nothing leaves your computer." },
-	{ icon: "key", title: "An AI service with a key", text: "OpenAI, Mistral, your company's AI… Add its address and your key." },
+/** The AIs Leuria works with, by kind. */
+const kinds = [
+	{ id: "app", tab: "An agent you sign in to", short: "Sign in", items: [["Claude Code", "with your Claude account"], ["Codex", "with your OpenAI account"], ["Gemini CLI", "with your Google account"], ["GitHub Copilot, Cursor, Pi…", "and forty more coding agents"]] },
+	{ id: "local", tab: "On this computer", short: "Free", items: [["LM Studio", "any chat model you loaded"], ["Ollama", "any chat or decision model"], ["oMLX", "MLX models on Apple Silicon"], ["Your browser's AI", "Chrome's built-in model, without Leuria"]] },
+	{ id: "key", tab: "With a key", short: "Your key", items: [["Any OpenAI-compatible API", "OpenAI, Mistral, Groq, OpenRouter…"], ["Your company's AI", "its own address, your key"], ["oMLX", "your Mac's models, served locally"], ["TypeSafe", "a decision model, for sites that decide"]] },
 ] as const;
 ---
 
 <Base
 	title="Leuria · Use the AI you already have, on the websites you choose"
-	description="Leuria connects your own AI (ChatGPT, Claude, or a model on your computer) to the websites you choose. They ask first, and they never see your files."
-	headerDownload={false}
-	immersive
+	description="A free, open-source app that connects the AI you already have (Claude Code, Codex, an API key, or a local model) to the websites you choose. Every site asks first; none sees your files."
 	jsonLd={SITE_JSON_LD}
 >
+	<!-- The manta swims behind the page, faintly; its star lights up over the dark section. -->
 	<Ocean />
 
-	<section class="zone intro" data-theme="light">
-		<div class="caustics"></div>
-		<div class="container hero">
-			<p class="kicker reveal">Leuria · for the websites you use</p>
-			<h1 class="giant reveal" style="animation-delay: 80ms">
-				<span class="line" data-float="light">Bring</span>
-				<span class="line" data-float="light">your own</span>
-				<span class="line" data-float="light"><em>AI</em><span class="punct">.</span></span>
-			</h1>
-			<div class="hero-foot reveal" style="animation-delay: 200ms">
-				<div class="hero-copy">
-					<p class="hero-lead">
-						Get AI help on the websites you use, from the AI you choose: ChatGPT, Claude, Mistral or a model on your computer.
-					</p>
-					<ul class="hero-gains">
-						{
-							gains.map((gain) => (
-								<li>
-									<Icon name="check" size={16} />
-									{gain.title}
-								</li>
-							))
-						}
-					</ul>
-				</div>
-				<div class="hero-actions">
-					<DownloadButton more />
-					<a class="btn btn-link" href="#uses">See what it does <span class="down" aria-hidden="true">↓</span></a>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="zone uses-zone" id="uses" data-theme="light">
-		<div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-		<div class="container gains-wrap">
-			<p class="eyebrow gains-eyebrow">What you get</p>
-			<ul class="gains" data-float>
-				{
-					gains.map((gain) => (
-						<li class="gain">
-							<h3>{gain.title}</h3>
-							<p>{gain.text}</p>
-						</li>
-					))
-				}
-			</ul>
-			<header class="zone-head" data-float>
-				<p class="eyebrow">What it's for</p>
-				<h2 class="big">Your AI<span class="punct">,</span> where it helps<span class="punct">.</span></h2>
-				<p class="zone-lead">
-					More and more websites add AI. With Leuria, it runs on the AI you trust and already pay for, not on one the site picked for you.
-				</p>
-			</header>
-			<ol class="uses">
-				{
-					uses.map((use, i) => (
-						<li class="use" data-float>
-							<span class="use-n">0{i + 1}</span>
-							<h3 class="use-title">{use.title}</h3>
-							<p class="use-text">{use.text}</p>
-						</li>
-					))
-				}
-			</ol>
-		</div>
-
-		<div class="container how" id="how">
-			<div class="how-copy" data-float>
-				<p class="eyebrow">How it works</p>
-				<h2 class="big">Set up once<span class="punct">.</span><br />Then just click<span class="punct">.</span></h2>
-				<ol class="steps">
-					<li><span class="step-n">1</span><div><h3>Download Leuria</h3><p>A small app. It waits in the background until a site needs it.</p></div></li>
-					<li><span class="step-n">2</span><div><h3>Choose your AI</h3><p>Leuria finds what you have. Pick one, sign in, and it checks that it works.</p></div></li>
-					<li><span class="step-n">3</span><div><h3>Click “Connect your AI”</h3><p>Leuria shows what the site can and can't do. You decide.</p></div></li>
-				</ol>
-			</div>
-			<div class="how-scene" data-float="heavy"><HeroScene /></div>
-		</div>
-
-		<div class="container ais">
-			<p class="ais-title">Works with the AI you have</p>
-			<ul class="ai-list">
-				{
-					ais.map((ai) => (
-						<li class="ai" data-float>
-							<Icon name={ai.icon} size={22} />
-							<h3>{ai.title}</h3>
-							<p>{ai.text}</p>
-						</li>
-					))
-				}
-			</ul>
-		</div>
-	</section>
-
-	<section class="zone privacy" id="privacy" data-theme="dark">
-		<div class="container">
-			<header class="zone-head" data-float>
-				<p class="eyebrow">Privacy</p>
-				<h2 class="giant-2">Every site<br />asks first<span class="punct">.</span></h2>
-				<p class="zone-lead">
-					A website can't use your AI until you say yes, in Leuria's own window. None of them get your keys, and you can disconnect any
-					of them in one click.
-				</p>
-			</header>
-
-			<div class="consent">
-				<div class="consent-col can" data-float>
-					<p class="consent-title"><span class="glow"></span>A site you connect can</p>
-					<ul>
-						<li>Send questions to your AI and show you the answers</li>
-						<li>Let your AI use tools from its own page, like searching its products</li>
-					</ul>
-				</div>
-				<div class="consent-col cant" data-float>
-					<p class="consent-title"><span class="glow"></span>It can't</p>
-					<ul>
-						<li>See your files or run anything on your computer</li>
-						<li>See your password or your AI account</li>
-						<li>Read what you asked on other sites</li>
-					</ul>
-				</div>
-			</div>
-
-			<dl class="facts">
-				<div data-float>
-					<dt>With a model on your computer</dt>
-					<dd>Your questions never leave your computer.</dd>
-				</div>
-				<div data-float>
-					<dt>With an AI app or service</dt>
-					<dd>Your questions go to that service, under your own account, as when you use it directly.</dd>
-				</div>
-				<div data-float>
-					<dt>Leuria itself</dt>
-					<dd>Keeps nothing of your conversations and sends no usage data. It remembers only the sites you connected.</dd>
-				</div>
-			</dl>
-		</div>
-	</section>
-
-	<section class="zone try-zone" data-theme="dark">
-		<div class="container try-grid">
-			<header class="zone-head" data-float>
-				<p class="eyebrow">Try it here</p>
-				<h2 class="big">This page runs<br />on your AI<span class="punct">.</span></h2>
-				<p class="zone-lead">Already have Leuria? Connect it, then ask anything about Leuria. Your AI reads this page to answer, and nothing else.</p>
-			</header>
-			<div data-float="heavy"><TryIt appearance="dark" /></div>
-		</div>
-	</section>
-
-	<section class="zone spread" id="share" data-theme="dark">
-		<div class="container spread-grid">
-			<header class="zone-head" data-float>
-				<p class="eyebrow">Spread the word</p>
-				<h2 class="big">Want it on a site you use<span class="punct">?</span><br />Tell them<span class="punct">.</span></h2>
-				<p class="zone-lead">
-					Every site that adds Leuria is one more place your AI works. Site owners listen to the people who use their site: a short
-					message from you counts.
-				</p>
-			</header>
-			<figure class="pitch card" data-float="heavy" data-pitch>
-				<figcaption>A message you can send them</figcaption>
-				<blockquote data-pitch-text>{pitch}</blockquote>
-				<div class="pitch-actions">
-					<button type="button" class="btn btn-ink" data-pitch-copy><Icon name="copy" size={16} /><span data-pitch-label>Copy the message</span></button>
-					<button type="button" class="btn btn-quiet" data-pitch-share hidden>Share…</button>
-				</div>
-			</figure>
-		</div>
-	</section>
-
-	<section class="zone closing" data-theme="dark">
-		<div class="container closing-inner">
-			<div class="pearl" aria-hidden="true"><span></span></div>
-			<h2 class="giant-2" data-float>Your AI<span class="punct">,</span><br />everywhere<span class="punct">.</span></h2>
-			<p class="zone-lead">Free and open source. On the websites you choose, and nowhere else.</p>
-			<div class="closing-actions">
+	<!-- 1 · What Leuria is, in plain words, beside the real clip of it working. -->
+	<section class="hero" aria-labelledby="hero-title" data-theme="light">
+		<div class="hero-text">
+			<h1 id="hero-title">Use the AI you already have, on the websites you choose<span class="punct">.</span></h1>
+			<p class="lede">
+				Leuria is a small, free app on your computer. It connects the AI you already have to the websites that ask for it: an agent you sign in to (Claude Code,
+				Codex, Gemini CLI and others), any OpenAI-compatible API with your key, or a model running on your machine. Each site asks first, you
+				say yes once, and none of them ever sees your files.
+			</p>
+			<div class="hero-actions">
 				<DownloadButton more />
-				<a class="btn btn-link" href="/websites">Run a website? <Icon name="arrow-right" /></a>
+				<a class="btn btn-link" href="#how">See how it works</a>
 			</div>
+			<ul class="facts">
+				<li>Every site asks first</li>
+				<li>No site sees your files</li>
+				<li>Free and open source</li>
+			</ul>
 		</div>
+		<figure class="hero-clip" data-reel data-captions={JSON.stringify(clips.map((c) => c.caption))}>
+			<!-- Three scenes, sixteen to nineteen seconds each, one after the other; a desktop window on wide screens, a phone-sized one on small ones. -->
+			<div class="reel-stage">
+				{
+					clips.map((clip, i) => (
+						<>
+							<video class:list={["clip", "clip-desktop", { on: i === 0 }]} data-scene={i} muted playsinline autoplay={i === 0} preload={i === 0 ? "auto" : "none"} poster={`/video/leuria-${clip.id}-desktop.jpg`} width="1440" height="900" aria-label={clip.alt}>
+								<source src={`/video/leuria-${clip.id}-desktop.mp4`} type="video/mp4" />
+							</video>
+							<video class:list={["clip", "clip-mobile", { on: i === 0 }]} data-scene={i} muted playsinline preload="none" poster={`/video/leuria-${clip.id}-mobile.jpg`} width="860" height="1864" aria-label={`${clip.alt}, on a phone-sized window`}>
+								<source src={`/video/leuria-${clip.id}-mobile.mp4`} type="video/mp4" />
+							</video>
+						</>
+					))
+				}
+			</div>
+			<figcaption>
+				<span data-caption>{clips[0]!.caption}</span>
+				<span class="reel-dots" role="tablist" aria-label="Scenes">
+					{clips.map((clip, i) => <button type="button" role="tab" aria-selected={i === 0} aria-label={clip.id} data-dot={i} class:list={{ on: i === 0 }} />)}
+				</span>
+			</figcaption>
+		</figure>
+	</section>
+
+	<!-- 2 · Four fields: what you see at each step, as it really looks (the menu bar, the app, its window, the site). -->
+	<section class="fields" aria-labelledby="fields-title" data-theme="light">
+		<div class="field f1 reveal">
+			<h2 id="fields-title" class="fields-title">Set up once<span class="punct">.</span></h2>
+			<div class="shot get-step">
+				<DownloadButton more />
+				<p>A small app. It waits in your menu bar until a site needs it.</p>
+			</div>
+			<p class="clause">{clauses[0]}</p>
+		</div>
+		<div class="field f2 reveal">
+			<img class="shot photo" src="/steps/add-an-ai.png" width="718" height="552" alt="Leuria's window: Add an AI, step 1 of 3. An AI app you use, a model on this computer, or an AI service with a key." loading="lazy" />
+			<p class="clause">{clauses[1]}</p>
+		</div>
+		<div class="field f3 reveal">
+			<img class="shot photo tall" src="/steps/site-asks.png" width="424" height="524" alt="Leuria's window when a site asks: Kiln & Co. (demo) wants to use your AI. Answers with Claude · Haiku 5.5, right for this site. It can ask your AI to answer you and let it use this site's features; it can't see your files or run programs, or see what you do on other websites. Not now, or Allow." loading="lazy" />
+			<p class="clause">{clauses[2]}</p>
+		</div>
+		<div class="field f4 reveal">
+			<img class="shot photo wide" src="/steps/site-answers.png" width="532" height="400" alt="The shop's Ask us panel, answered by your AI, Claude · Haiku 5.5: the cheapest mug is the plain white mug at €7, with 130 in stock." loading="lazy" />
+			<p class="clause">{clauses[3]}</p>
+		</div>
+	</section>
+
+	<!-- 3 · Privacy, in plain words: what a connected site can and can't do, and where you see them all. -->
+	<section class="privacy" id="privacy" aria-labelledby="privacy-title" data-theme="dark">
+		<div class="privacy-text">
+			<h2 id="privacy-title">Every site asks first<span class="punct">.</span></h2>
+			<p>A website can't use your AI until you say yes, in Leuria's own window. The window says what it may do, and what it may not.</p>
+		</div>
+		<dl class="rules">
+			<div class="rule can">
+				<dt>A site you allow can</dt>
+				<dd>Ask your AI to answer you.</dd>
+				<dd>Let your AI use that site's own features: search its products, read its notes.</dd>
+			</div>
+			<div class="rule cant">
+				<dt>It can't</dt>
+				<dd>See your files, or run programs on your computer.</dd>
+				<dd>See your password or your AI account.</dd>
+				<dd>See what you do on other websites.</dd>
+			</div>
+			<div class="rule">
+				<dt>And you</dt>
+				<dd>See every connected site in Leuria, with the AI that answers it, and disconnect any of them in one click.</dd>
+				<dd>With a model on your computer, nothing leaves it at all.</dd>
+			</div>
+		</dl>
+	</section>
+
+	<!-- 5 · The AI you have, by kind: tabs and bands. -->
+	<section class="ais" aria-labelledby="ais-title" id="how" data-theme="light">
+		<div class="ais-head">
+			<h2 id="ais-title" class="two-tone"><span>Works with</span> <br />the AI you have<span class="punct">.</span></h2>
+			<DownloadButton />
+		</div>
+		<div class="ais-body" data-kinds>
+			<div class="tabs" role="tablist" aria-label="Kinds of AI">
+				{
+					kinds.map((kind, i) => (
+						<button type="button" role="tab" id={`tab-${kind.id}`} aria-selected={i === 0} aria-controls={`panel-${kind.id}`} class="tab" data-tab={kind.id}>
+							<span class="tab-name">{kind.tab}</span>
+							<span class="tab-note">{kind.short}</span>
+						</button>
+					))
+				}
+			</div>
+			{
+				kinds.map((kind, i) => (
+					<ul class="bands" role="tabpanel" id={`panel-${kind.id}`} aria-labelledby={`tab-${kind.id}`} hidden={i !== 0}>
+						{kind.items.map(([name, note]) => (
+							<li class="band">
+								<span class="band-tag">{kind.short}</span>
+								<span class="band-main">
+									<span class="band-title">{name}</span>
+									<span class="band-note">{note}</span>
+								</span>
+								<span class="band-right">Chat · tools</span>
+							</li>
+						))}
+					</ul>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- 5 · The live thing: this page runs on your AI. -->
+	<section class="try" aria-labelledby="try-title" data-theme="light">
+		<div class="try-text">
+			<h2 id="try-title">This page runs <br />on your AI<span class="punct">.</span></h2>
+			<p>Already have Leuria? Connect it, then ask anything about Leuria. Your AI reads this page to answer, and nothing else.</p>
+		</div>
+		<div class="try-box" data-ui><TryIt /></div>
+	</section>
+
+	<!-- 6 · A sentence with a blank: the download. -->
+	<section class="get" aria-labelledby="get-title" data-theme="light">
+		<!-- A div, not a p: the menu is a list, which a paragraph may not hold. -->
+		<div class="get-line" id="get-title">
+			Yours, free, for
+			<span class="get-system" data-system data-value="mac">
+				<button type="button" class="get-word" aria-haspopup="listbox" aria-expanded="false" aria-label="Your system: Mac" data-word-button>
+					<span class="word-roll" data-word>Mac</span>
+					<svg class="chev" viewBox="0 0 16 16" width="0.5em" height="0.5em" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+				</button>
+				<ul class="get-menu" role="listbox" aria-label="Your system" hidden data-menu>
+					<li role="option" aria-selected="true" data-option="mac">Mac</li>
+					<li role="option" aria-selected="false" data-option="windows">Windows</li>
+					<li role="option" aria-selected="false" data-option="linux">Linux</li>
+				</ul>
+			</span>
+			<a class="get-go" href="/download" data-go data-downloads={JSON.stringify(downloads)}>Download</a>
+		</div>
+		<p class="get-note" data-note>A small app that waits in the background until a site needs it. Other systems and versions on the download page.</p>
 	</section>
 </Base>
 
 <script>
-	import { copyText } from "../scripts/browser";
+	import type { Build, Platform } from "../data/site";
+	import { platform } from "../scripts/browser";
 
-	// Hand the visitor a message for a site they'd like to see add Leuria. Nothing is sent from here.
-	const pitch = document.querySelector<HTMLElement>("[data-pitch]");
-	if (pitch) {
-		const text = pitch.querySelector<HTMLElement>("[data-pitch-text]")!.textContent!.trim();
-		const copy = pitch.querySelector<HTMLButtonElement>("[data-pitch-copy]")!;
-		const label = pitch.querySelector<HTMLElement>("[data-pitch-label]")!;
-		const share = pitch.querySelector<HTMLButtonElement>("[data-pitch-share]")!;
-		let reset = 0;
-		copy.addEventListener("click", async () => {
-			// No clipboard here: the words get selected so the visitor can copy them.
-			label.textContent = (await copyText(text, pitch.querySelector("[data-pitch-text]")!)) ? "Copied" : "Selected, copy it";
-			clearTimeout(reset);
-			reset = window.setTimeout(() => (label.textContent = "Copy the message"), 2400);
-		});
-		if (navigator.share) {
-			share.hidden = false;
-			share.addEventListener("click", () => navigator.share({ text }).catch(() => {}));
+	document.documentElement.classList.add("js");
+
+	// The reel through the sentence: frames pass as the page scrolls (CSS scroll timeline), nothing hijacked.
+	// The first screen's reel: one scene plays (the size that fits the screen), then the next, round and round.
+	const captions = JSON.parse(document.querySelector<HTMLElement>("[data-reel]")!.dataset.captions ?? "[]") as string[];
+	const dots = [...document.querySelectorAll<HTMLButtonElement>("[data-dot]")];
+	const caption = document.querySelector<HTMLElement>("[data-caption]")!;
+	const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+	let scene = 0;
+	const show = (next: number) => {
+		scene = next;
+		for (const video of document.querySelectorAll<HTMLVideoElement>(".reel-stage .clip")) {
+			const mine = Number(video.dataset.scene) === scene;
+			video.classList.toggle("on", mine);
+			if (mine && video.offsetParent !== null && !still) {
+				// Six clips at once would queue behind each other: each loads only when its turn comes.
+				if (video.preload === "none") {
+					video.preload = "auto";
+					video.load();
+				} else if (video.readyState > 0) video.currentTime = 0;
+				video.muted = true;
+				video.play().catch(() => undefined);
+			} else video.pause();
 		}
+		for (const dot of dots) {
+			const on = Number(dot.dataset.dot) === scene;
+			dot.classList.toggle("on", on);
+			dot.setAttribute("aria-selected", String(on));
+		}
+		caption.textContent = captions[scene] ?? "";
+	};
+	for (const video of document.querySelectorAll<HTMLVideoElement>(".reel-stage .clip")) {
+		video.addEventListener("ended", () => {
+			if (Number(video.dataset.scene) === scene) show((scene + 1) % captions.length);
+		});
 	}
+	for (const dot of dots) dot.addEventListener("click", () => show(Number(dot.dataset.dot)));
+	show(0);
+	matchMedia("(max-width: 860px)").addEventListener("change", () => show(scene));
+	// A tab opened in the background loads no media until it is looked at: start again then.
+	document.addEventListener("visibilitychange", () => {
+		if (document.visibilityState === "visible") show(scene);
+	});
+
+	// The AIs, by kind.
+	const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+	for (const tab of tabs) {
+		tab.addEventListener("click", () => {
+			for (const t of tabs) t.setAttribute("aria-selected", String(t === tab));
+			for (const panel of document.querySelectorAll<HTMLElement>("[role=tabpanel]")) panel.hidden = panel.id !== `panel-${tab.dataset.tab}`;
+		});
+	}
+
+	// The download sentence: the visitor's system filled in; the word is a menu, and swapping it rolls like a counter.
+	const system = document.querySelector<HTMLElement>("[data-system]")!;
+	const wordButton = system.querySelector<HTMLButtonElement>("[data-word-button]")!;
+	const word = system.querySelector<HTMLElement>("[data-word]")!;
+	const menu = system.querySelector<HTMLUListElement>("[data-menu]")!;
+	const options = [...menu.querySelectorAll<HTMLLIElement>("[data-option]")];
+	const go = document.querySelector<HTMLAnchorElement>("[data-go]")!;
+	const note = document.querySelector<HTMLElement>("[data-note]")!;
+	const builds = JSON.parse(go.dataset.downloads ?? "{}") as Record<Platform, Build>;
+	const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const outCurve = "cubic-bezier(0.77, 0, 0.175, 1)";
+	const inCurve = "cubic-bezier(0.23, 1, 0.32, 1)";
+
+	const apply = () => {
+		const value = system.dataset.value as Platform;
+		const build = builds[value];
+		go.href = build?.url ?? "/download";
+		wordButton.setAttribute("aria-label", `Your system: ${build?.name ?? value}`);
+		for (const o of options) o.setAttribute("aria-selected", String(o.dataset.option === value));
+		note.textContent = build?.url
+			? "A small app that waits in the background until a site needs it. Other systems and versions on the download page."
+			: `Not built for ${build?.name ?? value} yet: the download page says when. Mac and Windows are ready.`;
+	};
+	const choose = async (value: Platform) => {
+		if (value === system.dataset.value) return;
+		const name = builds[value]?.name ?? value;
+		if (!reduced) {
+			// The old word rolls up and out, the new one rolls in from below: one counter tick, 120 + 180 ms.
+			await word.animate([{ transform: "translateY(0)", opacity: 1 }, { transform: "translateY(-0.45em)", opacity: 0 }], { duration: 120, easing: outCurve, fill: "forwards" }).finished;
+		}
+		system.dataset.value = value;
+		word.textContent = name;
+		apply();
+		if (!reduced) word.animate([{ transform: "translateY(0.45em)", opacity: 0 }, { transform: "translateY(0)", opacity: 1 }], { duration: 180, easing: inCurve, fill: "forwards" });
+	};
+	const open = (show: boolean) => {
+		wordButton.setAttribute("aria-expanded", String(show));
+		if (show) {
+			menu.hidden = false;
+			if (!reduced) menu.animate([{ transform: "scale(0.96)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 150, easing: inCurve });
+			(options.find((o) => o.getAttribute("aria-selected") === "true") ?? options[0])?.focus();
+		} else if (!menu.hidden) {
+			const close = reduced ? null : menu.animate([{ transform: "scale(1)", opacity: 1 }, { transform: "scale(0.98)", opacity: 0 }], { duration: 100, easing: "ease" });
+			(close ? close.finished : Promise.resolve()).then(() => (menu.hidden = true));
+		}
+	};
+	wordButton.addEventListener("click", () => open(menu.hasAttribute("hidden")));
+	for (const o of options) {
+		o.tabIndex = -1;
+		o.addEventListener("click", () => {
+			void choose(o.dataset.option as Platform);
+			open(false);
+			wordButton.focus();
+		});
+	}
+	menu.addEventListener("keydown", (e) => {
+		const i = options.indexOf(document.activeElement as HTMLLIElement);
+		if (e.key === "ArrowDown") options[(i + 1) % options.length]?.focus();
+		else if (e.key === "ArrowUp") options[(i - 1 + options.length) % options.length]?.focus();
+		else if (e.key === "Enter" || e.key === " ") (document.activeElement as HTMLElement)?.click();
+		else if (e.key === "Escape") {
+			open(false);
+			wordButton.focus();
+		} else return;
+		e.preventDefault();
+	});
+	document.addEventListener("pointerdown", (e) => {
+		if (!system.contains(e.target as Node)) open(false);
+	});
+	const detected = platform();
+	if (detected) {
+		system.dataset.value = detected;
+		word.textContent = builds[detected]?.name ?? detected;
+	}
+	apply();
+
+	// Each section's parts rise once as it enters.
+	const seen = new IntersectionObserver(
+		(entries) => {
+			for (const e of entries) {
+				if (e.isIntersecting) {
+					e.target.classList.add("is-in");
+					seen.unobserve(e.target);
+				}
+			}
+		},
+		{ rootMargin: "0px 0px -10% 0px" },
+	);
+	for (const el of document.querySelectorAll(".reveal")) seen.observe(el);
 </script>
 
 <style>
-	/* One long backdrop: each section picks up the colour where the last one left off. */
-	/* No z-index here: the ground paints under the backdrop layer (z 1), the words over it (z 2). */
-	.zone {
+	/* One grid for the page: 12 columns inside the margin. */
+	:root {
+		--margin: clamp(16px, 2.5vw, 32px);
+		--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+		--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+	}
+	.punct {
+		margin-left: -0.14em;
+	}
+	/* The manta swims between the sections' grounds and their content: grounds below it, words and pictures above. */
+	:global(main) > section {
 		position: relative;
-		overflow: clip;
-		/* Re-read the tokens of this zone's theme (light or Night). */
-		color: var(--text);
 	}
-	.intro {
-		min-height: 100svh;
-		background:
-			radial-gradient(60% 50% at 6% 4%, var(--atmo-blush), transparent 70%),
-			radial-gradient(50% 45% at 96% 2%, var(--atmo-ice), transparent 70%),
-			radial-gradient(60% 50% at 10% 96%, var(--atmo-lavender), transparent 70%),
-			linear-gradient(#eef0f7, #e4ebf6);
-	}
-	.uses-zone {
-		background: linear-gradient(#e4ebf6 0%, #d3dcf1 40%, #aeb6e0 80%, #7d86c2 100%);
-		padding-bottom: 18vh;
-	}
-	.privacy {
-		background: linear-gradient(#7d86c2 0, #3a3f75 22vh, #1c2040 48vh, #14172b 100%);
-		padding-top: 30vh;
-	}
-	.try-zone {
-		background: linear-gradient(#14172b, #0c0e1d);
-	}
-	.closing {
-		background:
-			radial-gradient(50% 40% at 50% 100%, rgb(184 172 254 / 0.16), transparent 70%),
-			linear-gradient(#0c0e1d, #070812);
-	}
-	.zone > .container {
+	:global(main) > section > * {
 		position: relative;
 		z-index: 2;
-		padding-block: clamp(80px, 12vw, 160px);
 	}
-
-	/* Slow light across the top, fading down the page. */
-	.caustics {
-		position: absolute;
-		inset: -8%;
-		opacity: 0.55;
-		mix-blend-mode: soft-light;
-		background:
-			repeating-radial-gradient(circle at 30% 20%, transparent 0 22px, rgb(255 255 255 / 0.9) 24px, transparent 28px 60px),
-			repeating-radial-gradient(circle at 70% 60%, transparent 0 30px, rgb(255 255 255 / 0.8) 32px, transparent 36px 74px);
-		filter: blur(6px);
-		mask-image: linear-gradient(black, transparent 75%);
-		will-change: transform;
-		animation: shimmer 18s ease-in-out infinite alternate;
-		pointer-events: none;
-	}
-	@keyframes shimmer {
-		to {
-			transform: translate3d(3%, 2%, 0) scale(1.06);
-		}
-	}
-
-	/* Intro */
-	.hero {
-		display: grid;
-		align-content: end;
-		gap: clamp(24px, 4vw, 40px);
-		min-height: 100svh;
-		padding-top: 120px !important;
-		padding-bottom: clamp(40px, 7vw, 88px) !important;
-	}
-	/* Phones: room above the words for the manta. */
-	@media (max-width: 899px) {
-		.hero {
-			padding-top: max(120px, 36vh) !important;
-		}
-	}
-	.kicker,
-	.eyebrow {
-		color: var(--accent-text);
-		font-size: 12px;
-		font-weight: 700;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-		font-variant-numeric: tabular-nums;
-	}
-	.giant {
-		display: grid;
-		font-size: clamp(64px, min(10.8vw, 15.5vh), 188px);
-		line-height: 0.84;
+	h2 {
+		font-size: clamp(36px, 4vw, 60px);
+		line-height: 1;
 		font-weight: 800;
-		letter-spacing: -0.06em;
-		color: var(--ink);
-		margin-bottom: 0.08em;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
 	}
-	.giant em {
-		font-style: normal;
-		background: linear-gradient(100deg, #14172b 30%, #654db6 60%, #006c93 90%);
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
-	}
-	.hero-foot {
-		display: grid;
-		gap: var(--space-5);
-		max-width: 1000px;
-	}
-	@media (min-width: 900px) {
-		.hero-foot {
-			grid-template-columns: minmax(0, 460px) auto;
-			justify-content: space-between;
-			align-items: end;
-		}
-	}
-	.hero-lead {
-		font-size: 18px;
-		line-height: 28px;
+	.two-tone span:first-child {
 		color: var(--text-muted);
 	}
-	.hero-copy {
+
+	/* ---------- 1 · What it is, beside the clip ---------- */
+	.hero {
 		display: grid;
-		gap: var(--space-4);
-	}
-	/* The five gains, at a glance; the section under the hero tells each one. */
-	.hero-gains {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-2) var(--space-5);
-		margin: 0;
-		padding: 0;
-		list-style: none;
-		color: var(--text);
-		font-size: 15px;
-		font-weight: 600;
-	}
-	.hero-gains li {
-		display: inline-flex;
+		grid-template-columns: 5fr 7fr;
+		column-gap: 48px;
 		align-items: center;
-		gap: 6px;
+		min-height: calc(100svh - 68px);
+		padding: clamp(32px, 6vh, 72px) var(--margin);
 	}
-	.hero-gains :global(.icon) {
-		color: var(--accent-text);
+	.hero-text {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+		align-items: flex-start;
+	}
+	.hero h1 {
+		font-size: clamp(34px, 3.6vw, 52px);
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		line-height: 1.05;
+		max-width: 20ch;
+	}
+	.lede {
+		font-size: var(--step-lead);
+		line-height: 1.4;
+		max-width: 52ch;
+		color: var(--text);
 	}
 	.hero-actions {
 		display: flex;
+		align-items: center;
+		gap: 16px;
 		flex-wrap: wrap;
-		align-items: flex-start;
-		gap: var(--space-3);
-	}
-	.down {
-		display: inline-block;
-		animation: sink 1.8s ease-in-out infinite;
-	}
-	@keyframes sink {
-		50% {
-			transform: translateY(4px);
-		}
-	}
-
-	/* Shared zone heads */
-	.zone-head {
-		display: grid;
-		gap: var(--space-4);
-		max-width: 760px;
-		margin-bottom: clamp(48px, 8vw, 96px);
-	}
-	.big {
-		font-size: clamp(40px, 6.4vw, 88px);
-		line-height: 0.95;
-		font-weight: 800;
-		letter-spacing: -0.045em;
-		text-wrap: balance;
-	}
-	.giant-2 {
-		font-size: clamp(56px, 11vw, 168px);
-		line-height: 0.86;
-		font-weight: 800;
-		letter-spacing: -0.055em;
-	}
-	.zone-lead {
-		max-width: 560px;
-		font-size: 18px;
-		line-height: 28px;
-		color: var(--text-muted);
-	}
-
-	/* What it's for: soft rays from above */
-	.rays {
-		position: absolute;
-		inset: 0 0 auto;
-		height: 110vh;
-		pointer-events: none;
-		mask-image: linear-gradient(black, transparent);
-	}
-	.rays i {
-		position: absolute;
-		top: -10%;
-		width: 14vw;
-		height: 120%;
-		background: linear-gradient(rgb(255 255 255 / 0.55), transparent 80%);
-		filter: blur(22px);
-		transform-origin: top;
-		animation: sway 14s ease-in-out infinite alternate;
-	}
-	.rays i:nth-child(1) {
-		left: 12%;
-		transform: rotate(14deg);
-	}
-	.rays i:nth-child(2) {
-		left: 38%;
-		width: 8vw;
-		transform: rotate(8deg);
-		animation-delay: -4s;
-	}
-	.rays i:nth-child(3) {
-		left: 62%;
-		transform: rotate(4deg);
-		animation-delay: -8s;
-	}
-	.rays i:nth-child(4) {
-		left: 84%;
-		width: 6vw;
-		transform: rotate(-2deg);
-		animation-delay: -2s;
-	}
-	@keyframes sway {
-		to {
-			translate: 3vw 0;
-			opacity: 0.6;
-		}
-	}
-
-	.gains {
-		display: grid;
-		gap: var(--space-7);
-		margin: 0 0 clamp(64px, 9vw, 112px);
-		padding: 0;
-		list-style: none;
-	}
-	@media (min-width: 760px) {
-		.gains {
-			grid-template-columns: 1fr 1fr;
-		}
-	}
-	/* Three across, then two. */
-	@media (min-width: 1100px) {
-		.gains {
-			grid-template-columns: repeat(6, 1fr);
-		}
-		.gain {
-			grid-column: span 2;
-		}
-		.gain:nth-child(n + 4) {
-			grid-column: span 3;
-		}
-	}
-	.gain {
-		display: grid;
-		gap: var(--space-2);
-		align-content: start;
-		padding-top: var(--space-5);
-		border-top: 2px solid var(--ink);
-	}
-	.gain h3 {
-		margin: 0;
-		font-size: clamp(24px, 2.6vw, 32px);
-		line-height: 1.1;
-		font-weight: 800;
-		letter-spacing: -0.03em;
-		text-wrap: balance;
-	}
-	.gain p {
-		margin: 0;
-		max-width: 440px;
-		font-size: 17px;
-		line-height: 26px;
-		color: var(--text-muted);
-	}
-	/* Right under the hero: the gains come first, close to it. */
-	.zone > .gains-wrap {
-		padding-top: clamp(48px, 6vw, 80px);
-	}
-	.gains-eyebrow {
-		margin-bottom: var(--space-5);
-	}
-
-	.uses {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-		border-top: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
-	}
-	.use {
-		display: grid;
-		gap: var(--space-2) var(--space-6);
-		align-items: baseline;
-		padding: clamp(20px, 3vw, 36px) 0;
-		border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
-	}
-	@media (min-width: 900px) {
-		.use {
-			grid-template-columns: 72px 1fr minmax(0, 340px);
-		}
-	}
-	.use-n {
-		color: var(--accent-text);
-		font-weight: 700;
-		font-variant-numeric: tabular-nums;
-	}
-	.use-title {
-		font-size: clamp(36px, 6vw, 80px);
-		line-height: 1;
-		font-weight: 800;
-		letter-spacing: -0.045em;
-		transition:
-			transform var(--timing-base) var(--easing-standard),
-			color var(--timing-base) var(--easing-standard);
-	}
-	.use:hover .use-title {
-		transform: translateX(12px);
-		color: var(--accent-text);
-	}
-	.use-text {
-		color: var(--text-muted);
-	}
-
-	.how {
-		display: grid;
-		gap: clamp(48px, 6vw, 80px);
-		align-items: center;
-	}
-	@media (min-width: 1000px) {
-		.how {
-			grid-template-columns: 0.9fr 1.1fr;
-		}
-	}
-	.how-copy {
-		display: grid;
-		gap: var(--space-5);
-	}
-	.steps {
-		display: grid;
-		gap: var(--space-5);
-		margin: var(--space-4) 0 0;
-		padding: 0;
-		list-style: none;
-	}
-	.steps li {
-		display: flex;
-		gap: var(--space-4);
-	}
-	.step-n {
-		display: grid;
-		flex-shrink: 0;
-		place-items: center;
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		background: var(--ink);
-		color: var(--on-ink);
-		font-weight: 800;
-	}
-	.steps h3 {
-		margin: 0 0 2px;
-		font-size: 18px;
-		font-weight: 700;
-	}
-	.steps p {
-		margin: 0;
-		color: var(--text-muted);
-	}
-	.how-scene {
-		padding-bottom: 40px;
-		--approval-right: -8px;
-	}
-
-	.ais {
-		padding-top: 0 !important;
-	}
-	.ais-title {
-		margin-bottom: var(--space-5);
-		font-weight: 700;
-	}
-	.ai-list {
-		display: grid;
-		gap: var(--space-4);
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-	@media (min-width: 760px) {
-		.ai-list {
-			grid-template-columns: repeat(3, 1fr);
-		}
-	}
-	.ai {
-		display: grid;
-		gap: var(--space-2);
-		padding: var(--space-5);
-		border-radius: var(--radius-5);
-		background: rgb(255 255 255 / 0.4);
-		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.55);
-		backdrop-filter: blur(10px);
-		color: var(--text);
-	}
-	.ai h3 {
-		margin: var(--space-2) 0 0;
-		font-size: 17px;
-		font-weight: 700;
-	}
-	.ai p {
-		margin: 0;
-		color: var(--text-muted);
-	}
-
-	/* Privacy */
-	.consent {
-		display: grid;
-		gap: clamp(32px, 5vw, 64px);
-	}
-	@media (min-width: 760px) {
-		.consent {
-			grid-template-columns: 1fr 1fr;
-		}
-	}
-	.consent-title {
-		display: flex;
-		align-items: center;
-		gap: var(--space-3);
-		margin-bottom: var(--space-4);
-		font-size: 20px;
-		font-weight: 800;
-	}
-	.glow {
-		width: 12px;
-		height: 12px;
-		border-radius: 50%;
-		background: var(--c);
-		box-shadow:
-			0 0 12px 2px var(--c),
-			0 0 40px 8px color-mix(in oklab, var(--c) 45%, transparent);
-		animation: breathe 3s ease-in-out infinite;
-	}
-	.can {
-		--c: #6ed0a2;
-	}
-	.cant {
-		--c: #ff9a86;
-	}
-	@keyframes breathe {
-		50% {
-			opacity: 0.55;
-		}
-	}
-	.consent ul {
-		display: grid;
-		gap: var(--space-3);
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-	.consent li {
-		padding: var(--space-4) 0 var(--space-4) var(--space-5);
-		border-left: 2px solid color-mix(in oklab, var(--c) 60%, transparent);
-		font-size: 18px;
-		line-height: 26px;
 	}
 	.facts {
-		display: grid;
-		gap: var(--space-6);
-		margin: clamp(64px, 9vw, 112px) 0 0;
-		padding-top: var(--space-6);
-		border-top: 1px solid rgb(255 255 255 / 0.12);
-	}
-	@media (min-width: 760px) {
-		.facts {
-			grid-template-columns: repeat(3, 1fr);
-		}
-	}
-	.facts dt {
-		margin-bottom: var(--space-2);
-		font-weight: 700;
-	}
-	.facts dd {
-		margin: 0;
-		color: var(--text-muted);
-	}
-
-	/* Try it */
-	.try-grid {
-		display: grid;
-		gap: var(--space-7);
-		align-items: center;
-	}
-	@media (min-width: 1000px) {
-		.try-grid {
-			grid-template-columns: 1fr 1fr;
-		}
-		.try-grid .zone-head {
-			margin: 0;
-		}
-	}
-
-	/* Spread the word */
-	.spread {
-		background: #0c0e1d;
-	}
-	.spread-grid {
-		display: grid;
-		gap: var(--space-7);
-		align-items: center;
-	}
-	@media (min-width: 1000px) {
-		.spread-grid {
-			grid-template-columns: 1fr 1fr;
-		}
-		.spread-grid .zone-head {
-			margin: 0;
-		}
-	}
-	.pitch {
-		display: grid;
-		gap: var(--space-4);
-		margin: 0;
-		padding: var(--space-6);
-		border-radius: var(--radius-5);
-	}
-	.pitch figcaption {
-		color: var(--text-muted);
-		font-size: 13px;
-		font-weight: 700;
-	}
-	.pitch blockquote {
-		margin: 0;
-		font-size: 18px;
-		line-height: 28px;
-		user-select: all;
-	}
-	.pitch-actions {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-2);
+		gap: 8px 24px;
+		margin: 8px 0 0;
+		padding: 0;
+		list-style: none;
+		font-size: 16px;
+		font-weight: 600;
 	}
-
-	/* Closing: the pearl */
-	.closing-inner {
+	.facts li::before {
+		content: "";
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		margin-right: 10px;
+		border-radius: 50%;
+		background: var(--sage-9);
+		vertical-align: 2px;
+	}
+	.hero-clip {
+		margin: 0;
+		justify-self: center;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		align-items: center;
+	}
+	.reel-stage {
 		display: grid;
-		justify-items: center;
-		gap: var(--space-5);
-		text-align: center;
-		padding-bottom: clamp(96px, 14vw, 180px) !important;
+		width: 100%;
 	}
-	.closing .zone-lead {
-		margin-inline: auto;
+	.reel-stage .clip {
+		grid-area: 1 / 1;
+		width: 100%;
+		height: auto;
+		border-radius: 14px;
+		background: var(--pearl-3);
+		opacity: 0;
+		transition: opacity 500ms ease;
 	}
-	.pearl {
+	.reel-stage .clip.on {
+		opacity: 1;
 		position: relative;
-		width: clamp(140px, 22vw, 240px);
-		aspect-ratio: 1;
-		margin-bottom: var(--space-6);
-		border-radius: 50%;
-		background:
-			radial-gradient(38% 34% at 34% 28%, #ffffff, transparent 70%),
-			radial-gradient(60% 60% at 70% 75%, #cde8f7, transparent 70%),
-			radial-gradient(70% 70% at 25% 80%, #f9dce6, transparent 72%),
-			radial-gradient(80% 80% at 80% 20%, #d9d0ff, transparent 75%),
-			#d3f3e6;
-		box-shadow:
-			inset -18px -24px 40px rgb(20 23 43 / 0.35),
-			inset 10px 12px 30px rgb(255 255 255 / 0.5),
-			0 0 60px 10px rgb(217 208 255 / 0.25),
-			0 0 160px 40px rgb(109 197 241 / 0.12);
-		animation: float 6s ease-in-out infinite;
+		z-index: 1;
 	}
-	.pearl span {
+	.clip-mobile {
+		display: none;
+	}
+	.hero-clip figcaption {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+	.reel-dots {
+		display: flex;
+		gap: 8px;
+	}
+	.reel-dots button {
+		width: 8px;
+		height: 8px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: var(--pearl-7);
+		cursor: pointer;
+		transition: background-color 150ms ease, transform 160ms var(--ease-out);
+	}
+	.reel-dots button.on {
+		background: var(--ink);
+		transform: scale(1.25);
+	}
+	.hero-clip figcaption [data-caption] {
+		display: block;
+		font-size: 15px;
+		color: var(--text-muted);
+		max-width: 40ch;
+		text-align: center;
+		min-height: 2.6em;
+	}
+
+	/* ---------- 2 · One card, four fields ---------- */
+	.fields {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+	}
+	.field {
+		position: relative;
+		min-height: 520px;
+		padding: 28px;
+		display: flex;
+		flex-direction: column;
+	}
+	.f1 { background: var(--pearl-3); }
+	.f2 { background: var(--lavender-3); }
+	.f3 { background: var(--ice-3); }
+	.f4 { background: var(--sage-3); }
+	.fields-title {
+		font-size: clamp(22px, 2vw, 32px);
+		margin-bottom: auto;
+	}
+	/* Each step's picture, built as the real thing looks, 300px wide, at the same height in every field. */
+	.shot {
 		position: absolute;
-		inset: -40% -60% auto;
-		height: 20%;
-		top: 110%;
-		border-radius: 50%;
-		background: radial-gradient(rgb(0 0 0 / 0.55), transparent 70%);
-		filter: blur(10px);
+		left: 50%;
+		top: 40%;
+		transform: translate(-50%, -50%);
+		width: 300px;
+		font-size: 13px;
+		line-height: 1.35;
+		transition: transform 150ms var(--ease-out);
 	}
-	@keyframes float {
-		50% {
-			transform: translateY(-10px);
+	/* 1 · the site's own download control */
+	.get-step { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; width: 260px; }
+	.get-step p { font-size: 15px; color: var(--text-muted); max-width: 26ch; }
+	/* 2 and 3 · the app, as photographed */
+	.shot.photo { width: 320px; height: auto; border-radius: 10px; }
+	.shot.photo.tall { width: 250px; }
+	.shot.photo.wide { width: 300px; }
+	/* 3 · the window that asks */
+	.ask {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 14px;
+		border-radius: 12px;
+		background: var(--surface);
+	}
+	.ask-app { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+	.ask-title { font-weight: 700; font-size: 15px; line-height: 1.25; }
+	.ask-row b { display: inline-block; width: 40px; }
+	.ask-with { padding: 6px 8px; border-radius: 6px; background: var(--lavender-3); color: var(--text); font-size: 12px; }
+	.ask-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+	.ask-actions .btn { min-height: 32px; padding: 0 12px; font-size: 13px; }
+	/* 4 · the site, answering */
+	.site {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 14px;
+		border-radius: 12px;
+		background: #ffffff;
+		color: #171d1c;
+	}
+	.site-bar { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+	.site-chip { padding: 3px 8px; border-radius: 999px; background: #dcefeb; color: #16635a; font-size: 12px; font-weight: 600; }
+	.site-q { align-self: flex-end; max-width: 80%; padding: 8px 12px; border-radius: 12px 12px 4px 12px; background: #1f7a6d; color: #fff; }
+	.site-a { align-self: flex-start; max-width: 90%; padding: 8px 12px; border-radius: 12px 12px 12px 4px; background: #f2f4f3; }
+	.site-by { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 600; color: #16635a; }
+	.clause {
+		margin-top: auto;
+		font-size: clamp(22px, 2vw, 32px);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.15;
+		max-width: 14ch;
+		text-wrap: balance;
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.field:hover .shot {
+			transform: translate(-50%, calc(-50% - 6px));
 		}
 	}
-	.closing-actions {
+
+	/* ---------- 3 · Privacy, in words ---------- */
+	.privacy {
+		display: grid;
+		grid-template-columns: 5fr 7fr;
+		column-gap: 48px;
+		row-gap: 32px;
+		padding: clamp(80px, 12vh, 160px) var(--margin);
+		/* Fixed colours: this section is the page's dark field, whatever the theme tokens say inside it. */
+		background: #14172b;
+		color: #ffffff;
+	}
+	.privacy-text {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.privacy-text p {
+		max-width: 40ch;
+		font-size: 18px;
+		color: #c9ccdc;
+	}
+	.rules {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 4px;
+		margin: 0;
+	}
+	.rule {
+		padding: 22px;
+		background: #1e2238;
+	}
+	.rule dt {
+		font-weight: 700;
+		font-size: 18px;
+		margin-bottom: 12px;
+		color: #ffffff;
+	}
+	.rule dd {
+		margin: 0 0 10px;
+		padding-left: 22px;
+		position: relative;
+		font-size: 16px;
+		line-height: 1.4;
+		color: #c9ccdc;
+	}
+	.rule dd::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.55em;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: #19a572;
+	}
+	.rule.cant dd::before {
+		background: #ff6a4f;
+	}
+	.rule.cant dd::before,
+	.rule.can dd::before {
+		border-radius: 50%;
+	}
+
+	/* ---------- 5 · The AIs, by kind ---------- */
+	.ais {
+		padding: clamp(96px, 12vh, 180px) var(--margin);
+	}
+	.ais-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 24px;
+		flex-wrap: wrap;
+	}
+	.ais-body {
+		display: grid;
+		grid-template-columns: 150px 1fr;
+		column-gap: 40px;
+		margin-top: 56px;
+	}
+	.tabs {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.tab {
+		width: 150px;
+		height: 64px;
+		padding: 0 14px;
+		border: 0;
+		border-radius: 0;
+		background: var(--pearl-3);
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 2px;
+		cursor: pointer;
+		transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease-out);
+	}
+	.tab:active {
+		transform: scale(0.97);
+	}
+	.tab-name {
+		font-size: 15px;
+		font-weight: 600;
+	}
+	.tab-note {
+		font-size: 13px;
+		color: var(--text-muted);
+	}
+	.tab[aria-selected="true"] {
+		background: var(--ink);
+		color: var(--on-ink);
+	}
+	.tab[aria-selected="true"] .tab-note {
+		color: var(--pearl-8);
+	}
+	.bands {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+	.bands[hidden] {
+		display: none;
+	}
+	.band {
+		display: grid;
+		grid-template-columns: 110px 1fr auto;
+		align-items: center;
+		column-gap: 20px;
+		height: 76px;
+		padding: 0 20px;
+		border-radius: 8px;
+		background: var(--pearl-2);
+	}
+	.band:nth-child(even) {
+		background: var(--pearl-3);
+	}
+	.band-tag {
+		font-size: 18px;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+	.band-main {
+		display: flex;
+		flex-direction: column;
+	}
+	.band-title {
+		font-size: 18px;
+		font-weight: 600;
+	}
+	.band-note {
+		font-size: 14px;
+		color: var(--text-muted);
+	}
+	.band-right {
+		font-size: 14px;
+		color: var(--text-muted);
+	}
+
+	/* ---------- 5 · Ask this page ---------- */
+	.try {
+		display: grid;
+		grid-template-columns: 5fr 7fr;
+		gap: 40px;
+		align-items: center;
+		padding: clamp(96px, 12vh, 180px) var(--margin);
+		background: var(--pearl-2);
+	}
+	.try-text {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.try-text p {
+		max-width: 40ch;
+		font-size: 18px;
+	}
+
+	/* ---------- 6 · A sentence with a blank ---------- */
+	.get {
+		padding: clamp(96px, 14vh, 200px) var(--margin) clamp(48px, 8vh, 96px);
+	}
+	.get-line {
+		font-size: clamp(36px, 6vw, 96px);
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		line-height: 1.1;
+		max-width: 92%;
 		display: flex;
 		flex-wrap: wrap;
-		align-items: flex-start;
-		justify-content: center;
-		gap: var(--space-3);
-		margin-top: var(--space-3);
+		align-items: center;
+		gap: 0 0.22em;
+	}
+	/* The system is a word you can change: a button that reads like a word, a menu that opens from it. */
+	.get-system {
+		position: relative;
+		display: inline-flex;
+	}
+	.get-word {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.14em;
+		height: 1.1em;
+		padding: 0 0.22em 0 0.3em;
+		border: 0;
+		border-radius: 0.1em;
+		background: var(--pearl-3);
+		color: var(--text);
+		font: inherit;
+		letter-spacing: inherit;
+		cursor: pointer;
+		overflow: hidden;
+		transition: transform 160ms var(--ease-out), background-color 150ms ease;
+	}
+	.get-word:active {
+		transform: scale(0.97);
+	}
+	.get-word .chev {
+		flex: 0 0 auto;
+		opacity: 0.6;
+		transition: transform 200ms var(--ease-out), opacity 150ms ease;
+	}
+	.get-word[aria-expanded="true"] .chev {
+		transform: rotate(180deg);
+		opacity: 1;
+	}
+	.word-roll {
+		display: inline-block;
+		will-change: transform;
+	}
+	.get-menu {
+		position: absolute;
+		left: 0;
+		top: calc(100% + 0.12em);
+		z-index: 5;
+		min-width: 100%;
+		margin: 0;
+		padding: 6px;
+		list-style: none;
+		border-radius: 14px;
+		background: var(--surface);
+		box-shadow: 0 12px 28px -14px rgba(20, 23, 43, 0.35), 0 0 0 1px rgba(20, 23, 43, 0.06); /* taste-skill-ignore: a real menu, open, floats */
+		font-size: 20px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.2;
+		transform-origin: top left;
+	}
+	.get-menu li {
+		padding: 10px 14px;
+		border-radius: 9px;
+		cursor: pointer;
+		outline: 0;
+	}
+	.get-menu li[aria-selected="true"] {
+		color: var(--accent-text);
+	}
+	.get-menu li:focus-visible,
+	.get-menu li:hover {
+		background: var(--pearl-3);
+	}
+	.get-go {
+		display: inline-flex;
+		align-items: center;
+		height: 1.1em;
+		padding: 0 0.3em;
+		border-radius: 0.1em;
+		background: var(--accent);
+		color: #fff;
+		text-decoration: none;
+		transition: transform 160ms var(--ease-out), background-color 150ms ease;
+	}
+	.get-go:active {
+		transform: scale(0.97);
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.get-go:hover {
+			background: var(--lavender-10);
+		}
+	}
+	.get-note {
+		margin-top: 20px;
+		font-size: 16px;
+		color: var(--text-muted);
+		max-width: 60ch;
+	}
+
+	/* ---------- Motion ---------- */
+	@media (prefers-reduced-motion: no-preference) {
+		:global(.js) .reveal {
+			opacity: 0;
+			transform: translateY(24px);
+			transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+		}
+		:global(.js) .reveal.is-in {
+			opacity: 1;
+			transform: none;
+		}
+		:global(.js) .f2.reveal.is-in { transition-delay: 70ms; }
+		:global(.js) .f3.reveal.is-in { transition-delay: 140ms; }
+		:global(.js) .f4.reveal.is-in { transition-delay: 210ms; }
+		:global(.js) .hero-text > *,
+		:global(.js) .hero-clip {
+			animation: rise 600ms var(--ease-out) both;
+		}
+		:global(.js) .hero-text > :nth-child(2) { animation-delay: 70ms; }
+		:global(.js) .hero-text > :nth-child(3) { animation-delay: 140ms; }
+		:global(.js) .hero-text > :nth-child(4) { animation-delay: 210ms; }
+		:global(.js) .hero-clip { animation-delay: 160ms; }
+	}
+	@keyframes rise {
+		from { opacity: 0; transform: translateY(16px); }
+		to { opacity: 1; transform: none; }
+	}
+
+	/* ---------- Phone: its own composition ---------- */
+	@media (max-width: 860px) {
+		.hero { grid-template-columns: 1fr; row-gap: 32px; min-height: 0; padding: 24px 16px 40px; }
+		.hero h1 { font-size: 9vw; max-width: none; }
+		.lede { font-size: 17px; }
+		.clip-desktop { display: none; }
+		.clip-mobile { display: block; }
+		.reel-stage { width: min(100%, 360px); margin: 0 auto; }
+		.fields { grid-template-columns: 1fr; }
+		.field { min-height: 64svh; padding: 20px; }
+		.fields-title { font-size: 24px; margin-bottom: 12px; }
+		.clause { order: -1; margin: 0 0 32px; font-size: 24px; }
+		.shot { position: static; transform: none; margin: 0 auto; max-width: 100%; }
+		.privacy { grid-template-columns: 1fr; padding: 64px 16px; }
+		.rules { grid-template-columns: 1fr; }
+		.ais { padding: 64px 16px; }
+		.ais-body { grid-template-columns: 1fr; row-gap: 16px; margin-top: 32px; }
+		.tabs { flex-direction: row; position: sticky; top: 0; z-index: 2; background: var(--bg); padding: 8px 0; }
+		.tab { flex: 1; width: auto; height: 56px; }
+		.band { grid-template-columns: 1fr; height: auto; padding: 16px; row-gap: 4px; }
+		.band-tag { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+		.try { grid-template-columns: 1fr; padding: 64px 16px; }
+		.get { padding: 64px 16px 48px; }
+		.get-line { font-size: 10vw; }
+		.get-word { font-size: inherit; }
+		.get-menu { font-size: 18px; }
+		.get-note { font-size: 15px; }
 	}
 </style>

@@ -55,7 +55,7 @@ const APP_JSON_LD = {
 	"@type": "SoftwareApplication",
 	"@id": "https://leuria.eu/#app",
 	name: "Leuria",
-	description: "Use your own AI (ChatGPT, Claude, Mistral or a model on your computer) on the websites you choose. Every site asks first.",
+	description: "Use your own AI on the websites you choose: Claude Code, Codex or Gemini CLI, any OpenAI-compatible API with your key, or a model on your computer. Every site asks first.",
 	url: "https://leuria.eu",
 	applicationCategory: "UtilitiesApplication",
 	operatingSystem: Object.values(downloads)

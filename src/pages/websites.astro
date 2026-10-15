@@ -1,88 +1,117 @@
 ---
+/**
+ * For websites: what a site gets by running on its visitors' AI, five demos that do, the code, the licence.
+ * Same vocabulary as the home page: text left, picture right; flat bands; a dark field for the rules.
+ */
 import Icon from "../components/Icon.astro";
 import Ocean from "../components/Ocean.astro";
 import { DEVELOPERS_URL } from "../data/site";
 import Base from "../layouts/Base.astro";
 
-const reasons = [
-	{
-		icon: "key",
-		title: "No AI bill, no keys",
-		text: "Your visitors' own AI answers. You don't pay per question, and there is no key to protect in your page or on your server.",
-	},
-	{
-		icon: "search",
-		title: "Your features, your data",
-		text: "The AI calls tools that run in your page: search your catalogue, fill your form, read your docs. Your data stays in your code.",
-	},
-	{
-		icon: "shield",
-		title: "Trust built in",
-		text: "Visitors approve your site in Leuria's own window, which shows what you can and can't do. Nothing runs until they say yes.",
-	},
-	{
-		icon: "globe",
-		title: "Works for every visitor",
-		text: "No Leuria yet? The same feature can use the browser's built-in AI, a small model in the page, or your own server.",
-	},
+const DEMOS_URL = "https://demo.leuria.dev/";
+
+/** The showroom's demos, with the showroom's own words and screenshots. */
+const demos = [
+	{ id: "shop", name: "Kiln & Co.", claim: "A shop whose assistant sells from the page's own stock.", shows: "Connect button · Page tools · Structured output", alt: "The Kiln & Co. demo shop: three mugs, their prices and stock, and the Connect your AI button" },
+	{ id: "notes", name: "Maren's notebook", claim: "A notebook you search by meaning, indexed in the visitor's browser.", shows: "Search by meaning · Related notes · Answers with sources", alt: "Maren's notebook: a list of notes and a search by meaning" },
+	{ id: "dex", name: "Hollowmark", claim: "A field guide to 48 creatures. Describe one to find it.", shows: "Search by meaning · Similar entries · Team builder", alt: "The Hollowmark field guide: a grid of creature entries" },
+	{ id: "bike", name: "Rayon Cycles", claim: "A help desk that follows the workshop's own guides.", shows: "Skills · Page tools · Bookings you confirm", alt: "Rayon Cycles: the workshop's services and its help desk" },
+	{ id: "home", name: "Hearth", claim: "A house read by a decision model, in one call.", shows: "Decisions · Decision trace · Chat only for words", alt: "Hearth: the house's devices by room, and the decision trace" },
 ] as const;
 ---
 
 <Base
 	title="Leuria for websites · AI features that run on your visitors' AI"
-	description="Add AI features to your website without paying for AI. Your visitors bring their own, through Leuria, and your tools run in your page."
+	description="Add an assistant, answers from your docs or search by meaning to your website, without an AI bill. Your visitors bring the AI they already have, through Leuria."
 >
 	<Ocean intro={false} />
-	<section class="hero atmosphere">
-		<div class="container hero-inner" data-float>
-			<p class="eyebrow reveal">For websites</p>
-			<h1 class="display reveal" style="animation-delay: 60ms">AI features that run on your visitors' AI</h1>
-			<p class="lead reveal" style="animation-delay: 120ms">
-				Add an assistant, answers from your docs or search by meaning. Your visitors connect the AI they already have, and you pay for
-				no model.
-			</p>
-			<div class="actions reveal" style="animation-delay: 180ms">
-				<a class="btn btn-ink btn-lg" href={DEVELOPERS_URL}>Read the developer docs <Icon name="arrow-right" /></a>
-			</div>
-		</div>
-	</section>
 
-	<section class="section" aria-labelledby="why-title">
-		<div class="container">
-			<div class="section-head">
-				<p class="eyebrow">Why Leuria</p>
-				<h2 class="heading-1" id="why-title">The AI is theirs<span class="punct">,</span> the experience is yours</h2>
+	<!-- 1 · What a site gets, beside a real demo. -->
+	<section class="hero" aria-labelledby="hero-title" data-theme="light">
+		<div class="hero-text">
+			<h1 id="hero-title">AI features on your site, on your visitors' AI<span class="punct">.</span></h1>
+			<p class="lede">
+				Your visitors already have an AI: an agent they sign in to, an API with their key, or a model on their computer. Leuria connects it to your
+				page. You add a button and a few lines of code; nobody pays for a new model, and your data never leaves your page.
+			</p>
+			<div class="hero-actions">
+				<a class="btn btn-ink btn-lg" href={DEVELOPERS_URL}>Read the developer docs <Icon name="arrow-right" /></a>
+				<a class="btn btn-link" href={DEMOS_URL}>Try the demos</a>
 			</div>
-			<ul class="reasons">
-				{
-					reasons.map((reason) => (
-						<li class="reason card" data-float>
-							<span class="reason-icon">
-								<Icon name={reason.icon} size={20} />
-							</span>
-							<h3 class="heading-3">{reason.title}</h3>
-							<p class="muted">{reason.text}</p>
-						</li>
-					))
-				}
+			<ul class="facts">
+				<li>No AI bill, no key to hide</li>
+				<li>Your tools run in your page</li>
+				<li>Every visitor says yes first</li>
 			</ul>
 		</div>
+		<figure class="hero-shot">
+			<img src="/demos/shop.jpg" width="1440" height="900" alt={demos[0].alt} fetchpriority="high" />
+			<figcaption>Kiln &amp; Co., a demo shop. Its assistant answers from the page's own stock, with the visitor's AI.</figcaption>
+		</figure>
 	</section>
 
-	<section class="section code-section" aria-labelledby="code-title">
-		<div class="container code-grid">
-			<div class="section-head">
-				<p class="eyebrow">A few lines</p>
-				<h2 class="heading-1" id="code-title">Add the button<span class="punct">,</span> then ask</h2>
-				<p class="lead">
-					“Connect your AI” handles the rest: finding Leuria, asking the visitor, and offering another AI when they don't have it.
-					Plain JavaScript, React, or any framework.
-				</p>
-				<p><a class="btn btn-link" href={DEVELOPERS_URL}>Start with the quickstart <Icon name="arrow-right" /></a></p>
+	<!-- 2 · What changes for the site, in plain words. -->
+	<section class="rules-section" aria-labelledby="rules-title" data-theme="dark">
+		<div class="rules-text">
+			<h2 id="rules-title">What changes for you<span class="punct">.</span></h2>
+			<p>The AI is your visitor's. The features, the tools and the data are yours, in your page, in your code.</p>
+		</div>
+		<dl class="rules">
+			<div class="rule can">
+				<dt>You get</dt>
+				<dd>An assistant, answers from your docs, search by meaning, a form filled from a message.</dd>
+				<dd>Tools the AI calls in your page: search your catalogue, read your notes, book a slot.</dd>
 			</div>
-			<figure class="code card" data-float="heavy">
-				<figcaption>shop.js</figcaption>
-				<pre><code><span class="k">import</span> {"{"} createAI, leuria, promptAPI {"}"} <span class="k">from</span> <span class="s">"@leuria/client"</span>
+			<div class="rule cant">
+				<dt>You don't need</dt>
+				<dd>An AI bill, or a key in your page or on your server.</dd>
+				<dd>A server at all: every demo below is static files.</dd>
+			</div>
+			<div class="rule">
+				<dt>Your visitor sees</dt>
+				<dd>Leuria's window, which says what your site can and can't do. Nothing runs until they say yes.</dd>
+				<dd>Without Leuria, the same feature can use the browser's built-in AI, or your own server.</dd>
+			</div>
+		</dl>
+	</section>
+
+	<!-- 3 · Five demos, as they look. -->
+	<section class="demos" aria-labelledby="demos-title" data-theme="light">
+		<div class="demos-head">
+			<h2 id="demos-title" class="two-tone"><span>Five sites</span> <br />that already do<span class="punct">.</span></h2>
+			<a class="btn btn-quiet" href={DEMOS_URL}>All demos <Icon name="arrow-right" /></a>
+		</div>
+		<ul class="bands">
+			{
+				demos.map((demo) => (
+					<li class="band">
+						<a class="band-shot" href={`${DEMOS_URL}${demo.id}/`} aria-label={`Open ${demo.name}`}>
+							<img src={`/demos/${demo.id}.jpg`} width="1440" height="900" alt={demo.alt} loading="lazy" />
+						</a>
+						<span class="band-main">
+							<span class="band-title">{demo.name}</span>
+							<span class="band-note">{demo.claim}</span>
+						</span>
+						<span class="band-right">{demo.shows}</span>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<!-- 4 · The code: the button, then a question with a tool. -->
+	<section class="code-section" aria-labelledby="code-title" data-theme="light">
+		<div class="code-text">
+			<h2 id="code-title">Add the button, then ask<span class="punct">.</span></h2>
+			<p>
+				“Connect your AI” handles the rest: finding Leuria, asking the visitor, and offering another AI when they don't have it. Plain JavaScript,
+				React, or any framework.
+			</p>
+			<a class="btn btn-link" href={DEVELOPERS_URL}>Start with the quickstart <Icon name="arrow-right" /></a>
+		</div>
+		<figure class="code">
+			<figcaption>shop.js</figcaption>
+			<pre><code><span class="k">import</span> {"{"} createAI, leuria, promptAPI {"}"} <span class="k">from</span> <span class="s">"@leuria/client"</span>
 <span class="k">import</span> {"{"} setDefaultClient {"}"} <span class="k">from</span> <span class="s">"@leuria/connect"</span>
 
 <span class="k">const</span> ai = createAI({"{"} providers: [leuria(), promptAPI()] {"}"})
@@ -92,93 +121,272 @@ setDefaultClient(ai)   <span class="c">// &lt;leuria-connect-button&gt; uses it<
   prompt: <span class="s">"A mug that keeps tea warm, under €30?"</span>,
   tools: [searchProducts],   <span class="c">// runs in your page</span>
 {"}"}).text()</code></pre>
-			</figure>
-		</div>
+		</figure>
 	</section>
 
-	<section class="section closing atmosphere" aria-labelledby="closing-title">
-		<div class="container closing-inner">
-			<h2 class="heading-1" id="closing-title">Open source<span class="punct">,</span> from the button to the app</h2>
-			<p class="lead">The libraries and the desktop app are open source, under the Apache 2.0 license.</p>
-			<a class="btn btn-quiet btn-lg" href={DEVELOPERS_URL}>Go to leuria.dev <Icon name="arrow-right" /></a>
-		</div>
+	<!-- 5 · The licence, in one line. -->
+	<section class="close" aria-labelledby="close-title" data-theme="light">
+		<h2 id="close-title">Open source, from the button to the app<span class="punct">.</span></h2>
+		<p>The libraries and the desktop app, under the Apache 2.0 licence.</p>
+		<a class="btn btn-ink btn-lg" href={DEVELOPERS_URL}>Go to leuria.dev <Icon name="arrow-right" /></a>
 	</section>
 </Base>
 
 <style>
-	.hero {
-		padding: clamp(64px, 10vw, 128px) 0;
+	:root {
+		--margin: clamp(16px, 2.5vw, 32px);
+		--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 	}
-	.hero-inner {
-		display: grid;
-		justify-items: center;
-		gap: var(--space-5);
-		max-width: 860px;
-		text-align: center;
+	.punct {
+		margin-left: -0.14em;
 	}
-	.hero-inner .lead {
-		max-width: 620px;
+	:global(main) > section {
+		position: relative;
 	}
-	.actions {
-		margin-top: var(--space-2);
+	:global(main) > section > * {
+		position: relative;
+		z-index: 2;
+	}
+	h2 {
+		font-size: clamp(36px, 4vw, 60px);
+		line-height: 1;
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+	}
+	.two-tone span:first-child {
+		color: var(--text-muted);
 	}
 
-	.reasons {
+	/* ---------- 1 · Hero ---------- */
+	.hero {
 		display: grid;
-		gap: var(--space-4);
-		margin: 0;
+		grid-template-columns: 5fr 7fr;
+		column-gap: 48px;
+		align-items: center;
+		min-height: calc(100svh - 68px);
+		padding: clamp(32px, 6vh, 72px) var(--margin);
+	}
+	.hero-text {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+		align-items: flex-start;
+	}
+	.hero h1 {
+		font-size: clamp(34px, 3.6vw, 52px);
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		line-height: 1.05;
+		max-width: 20ch;
+	}
+	.lede {
+		font-size: var(--step-lead);
+		line-height: 1.4;
+		max-width: 52ch;
+	}
+	.hero-actions {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		flex-wrap: wrap;
+	}
+	.facts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 24px;
+		margin: 8px 0 0;
 		padding: 0;
 		list-style: none;
+		font-size: 16px;
+		font-weight: 600;
 	}
-	@media (min-width: 760px) {
-		.reasons {
-			grid-template-columns: repeat(2, 1fr);
-		}
+	.facts li::before {
+		content: "";
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		margin-right: 10px;
+		border-radius: 50%;
+		background: var(--sage-9);
+		vertical-align: 2px;
 	}
-	.reason {
-		display: grid;
-		align-content: start;
-		gap: var(--space-2);
-		padding: var(--space-6) var(--space-5);
-	}
-	.reason-icon {
-		display: grid;
-		place-items: center;
-		width: 40px;
-		height: 40px;
-		margin-bottom: var(--space-3);
-		border-radius: var(--radius-3);
-		background: var(--accent-soft);
-		color: var(--accent-text);
-	}
-
-	.code-section {
-		background: var(--surface-sunken);
-		border-block: 1px solid var(--border);
-	}
-	.code-grid {
-		display: grid;
-		gap: var(--space-6);
+	.hero-shot {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 		align-items: center;
 	}
-	@media (min-width: 1000px) {
-		.code-grid {
-			grid-template-columns: 1fr 1.15fr;
+	.hero-shot img {
+		width: 100%;
+		height: auto;
+		border-radius: 14px;
+		background: var(--pearl-3);
+	}
+	.hero-shot figcaption {
+		font-size: 15px;
+		color: var(--text-muted);
+		max-width: 48ch;
+		text-align: center;
+	}
+
+	/* ---------- 2 · Rules, on the dark field ---------- */
+	.rules-section {
+		display: grid;
+		grid-template-columns: 5fr 7fr;
+		column-gap: 48px;
+		row-gap: 32px;
+		padding: clamp(80px, 12vh, 160px) var(--margin);
+		background: #14172b;
+		color: #ffffff;
+	}
+	.rules-text {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.rules-text p {
+		max-width: 40ch;
+		font-size: 18px;
+		color: #c9ccdc;
+	}
+	.rules {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 4px;
+		margin: 0;
+	}
+	.rule {
+		padding: 22px;
+		background: #1e2238;
+	}
+	.rule dt {
+		font-weight: 700;
+		font-size: 18px;
+		margin-bottom: 12px;
+	}
+	.rule dd {
+		position: relative;
+		margin: 0 0 10px;
+		padding-left: 22px;
+		font-size: 16px;
+		line-height: 1.4;
+		color: #c9ccdc;
+	}
+	.rule dd::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.55em;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: #8fa3ff;
+	}
+	.rule.can dd::before {
+		background: #19a572;
+	}
+	.rule.cant dd::before {
+		background: #ff6a4f;
+	}
+
+	/* ---------- 3 · The demos, as bands with their pictures ---------- */
+	.demos {
+		padding: clamp(96px, 12vh, 180px) var(--margin);
+	}
+	.demos-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 24px;
+		flex-wrap: wrap;
+	}
+	.bands {
+		list-style: none;
+		margin: 56px 0 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+	.band {
+		display: grid;
+		grid-template-columns: 240px 1fr auto;
+		align-items: center;
+		column-gap: 28px;
+		padding: 16px 20px 16px 16px;
+		border-radius: 8px;
+		background: var(--pearl-2);
+	}
+	.band:nth-child(even) {
+		background: var(--pearl-3);
+	}
+	.band-shot {
+		display: block;
+		border-radius: 6px;
+		overflow: hidden;
+		transition: transform 160ms var(--ease-out);
+	}
+	.band-shot img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.band-main {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+	.band-title {
+		font-size: 20px;
+		font-weight: 600;
+	}
+	.band-note {
+		font-size: 16px;
+		color: var(--text-muted);
+		max-width: 44ch;
+	}
+	.band-right {
+		font-size: 14px;
+		color: var(--text-muted);
+		text-align: right;
+		max-width: 22ch;
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.band-shot:hover {
+			transform: translateY(-3px);
 		}
-		.code-grid .section-head {
-			margin: 0;
-		}
+	}
+
+	/* ---------- 4 · The code ---------- */
+	.code-section {
+		display: grid;
+		grid-template-columns: 5fr 7fr;
+		gap: 40px;
+		align-items: center;
+		padding: clamp(96px, 12vh, 180px) var(--margin);
+		background: var(--pearl-2);
+	}
+	.code-text {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		align-items: flex-start;
+	}
+	.code-text p {
+		max-width: 40ch;
+		font-size: 18px;
 	}
 	.code {
 		margin: 0;
 		overflow: hidden;
-		border-radius: var(--radius-4);
+		border-radius: 14px;
 		background: #14172b;
 		color: #d6d8e5;
-		box-shadow: var(--shadow-4);
 	}
-	figcaption {
-		padding: var(--space-3) var(--space-5);
+	.code figcaption {
+		padding: 12px 20px;
 		border-bottom: 1px solid rgb(255 255 255 / 0.08);
 		color: #9a9db3;
 		font-family: var(--font-mono);
@@ -186,7 +394,7 @@ setDefaultClient(ai)   <span class="c">// &lt;leuria-connect-button&gt; uses it<
 	}
 	pre {
 		margin: 0;
-		padding: var(--space-5);
+		padding: 20px;
 		overflow-x: auto;
 		font-family: var(--font-mono);
 		font-size: 13px;
@@ -202,13 +410,49 @@ setDefaultClient(ai)   <span class="c">// &lt;leuria-connect-button&gt; uses it<
 		color: #7c7f92;
 	}
 
-	.closing-inner {
-		display: grid;
-		justify-items: center;
-		gap: var(--space-4);
-		text-align: center;
+	/* ---------- 5 · Close ---------- */
+	.close {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 20px;
+		padding: clamp(96px, 14vh, 200px) var(--margin) clamp(48px, 8vh, 96px);
 	}
-	.closing .btn {
-		margin-top: var(--space-2);
+	.close p {
+		font-size: 18px;
+		color: var(--text-muted);
+	}
+
+	/* ---------- Motion ---------- */
+	@media (prefers-reduced-motion: no-preference) {
+		.hero-text > *,
+		.hero-shot {
+			animation: rise 600ms var(--ease-out) both;
+		}
+		.hero-text > :nth-child(2) { animation-delay: 70ms; }
+		.hero-text > :nth-child(3) { animation-delay: 140ms; }
+		.hero-text > :nth-child(4) { animation-delay: 210ms; }
+		.hero-shot { animation-delay: 160ms; }
+	}
+	@keyframes rise {
+		from { opacity: 0; transform: translateY(16px); }
+		to { opacity: 1; transform: none; }
+	}
+
+	/* ---------- Phone ---------- */
+	@media (max-width: 860px) {
+		.hero { grid-template-columns: 1fr; row-gap: 32px; min-height: 0; padding: 24px 16px 40px; }
+		.hero h1 { font-size: 9vw; max-width: none; }
+		.lede { font-size: 17px; }
+		.rules-section { grid-template-columns: 1fr; padding: 64px 16px; }
+		.rules { grid-template-columns: 1fr; }
+		.demos, .code-section, .close { padding-left: 16px; padding-right: 16px; }
+		.demos { padding-top: 64px; padding-bottom: 64px; }
+		.bands { margin-top: 32px; }
+		.band { grid-template-columns: 1fr; row-gap: 12px; padding: 12px; }
+		.band-right { text-align: left; max-width: none; }
+		.code-section { grid-template-columns: 1fr; padding-top: 64px; padding-bottom: 64px; }
+		pre { font-size: 12px; }
+		.close { padding-top: 64px; }
 	}
 </style>

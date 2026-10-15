@@ -22,8 +22,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 <section class="section first-open" id="first-open" data-system="mac" aria-labelledby="first-open-title">
 	<div class="container">
 		<div class="section-head">
-			<p class="eyebrow">First time on a Mac</p>
-			<h2 class="heading-1" id="first-open-title">Allow Leuria once<span class="punct">,</span> in three clicks</h2>
+			<h2 class="heading-1" id="first-open-title">First time on a Mac: allow Leuria once<span class="punct">,</span> in three clicks</h2>
 			<p class="lead">
 				Leuria is free and not registered with Apple, so your Mac can't check it and blocks it the first time. You allow it once, and it
 				opens normally from then on.
@@ -31,7 +30,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 		</div>
 
 		<ol class="steps">
-			<li class="step card" data-float>
+			<li class="step card">
 				<div class="shot" aria-hidden="true">
 					<div class="alert">
 						<span class="alert-icon"><Logo size={30} wordmark={false} /></span>
@@ -50,7 +49,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 				</div>
 			</li>
 
-			<li class="step card" data-float>
+			<li class="step card">
 				<div class="shot" aria-hidden="true">
 					<div class="settings">
 						<div class="side">
@@ -77,7 +76,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 				</div>
 			</li>
 
-			<li class="step card" data-float>
+			<li class="step card">
 				<div class="shot" aria-hidden="true">
 					<div class="alert">
 						<span class="alert-icon"><Logo size={30} wordmark={false} /></span>
@@ -105,8 +104,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 <section class="section first-open" id="first-open-windows" data-system="windows" aria-labelledby="first-open-windows-title">
 	<div class="container">
 		<div class="section-head">
-			<p class="eyebrow">First time on Windows</p>
-			<h2 class="heading-1" id="first-open-windows-title">Allow Leuria once<span class="punct">,</span> in two clicks</h2>
+						<h2 class="heading-1" id="first-open-windows-title">First time on Windows: allow Leuria once<span class="punct">,</span> in two clicks</h2>
 			<p class="lead">
 				Leuria is free and new, so Windows doesn't know it yet and warns you the first time. You allow it once, and it opens normally from
 				then on.
@@ -114,7 +112,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 		</div>
 
 		<ol class="steps">
-			<li class="step card" data-float>
+			<li class="step card">
 				<div class="shot" aria-hidden="true">
 					<div class="bubble">
 						<p class="bubble-file">Leuria-windows-setup.exe</p>
@@ -135,7 +133,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 				</div>
 			</li>
 
-			<li class="step card" data-float>
+			<li class="step card">
 				<div class="shot" aria-hidden="true">
 					<div class="smartscreen">
 						<p class="ss-title">Windows protected your PC</p>
@@ -155,7 +153,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 				</div>
 			</li>
 
-			<li class="step card" data-float>
+			<li class="step card">
 				<div class="shot" aria-hidden="true">
 					<div class="smartscreen">
 						<p class="ss-title">Windows protected your PC</p>
@@ -184,8 +182,9 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 	.first-open {
 		scroll-margin-top: 24px;
 	}
-	.first-open.is-downloading .eyebrow::after {
-		content: " · While it downloads";
+	.first-open.is-downloading .section-head::after {
+		content: "While it downloads, here is the one step your system will ask for.";
+		color: var(--text-muted);
 	}
 	.steps {
 		display: grid;
@@ -237,10 +236,7 @@ const PRIVACY_SETTINGS = "x-apple.systempreferences:com.apple.preference.securit
 		place-items: center;
 		min-height: 216px;
 		padding: var(--space-5);
-		background:
-			radial-gradient(60% 80% at 0% 0%, var(--atmo-blush), transparent 70%),
-			radial-gradient(60% 80% at 100% 100%, var(--atmo-ice), transparent 70%),
-			var(--surface-sunken);
+		background: var(--pearl-3);
 		font-size: 12px;
 		line-height: 16px;
 	}

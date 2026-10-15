@@ -57,6 +57,25 @@ const suggestions = ["What does Leuria do, in two sentences?", "Can a website se
 	const input = form.querySelector("input")!;
 	const send = form.querySelector<HTMLButtonElement>("button")!;
 	const answer = root.querySelector<HTMLElement>("[data-answer]")!;
+	/** Simple markdown: paragraphs, bullet lists, bold, italic, code. Text is escaped first, so nothing from the model is HTML. */
+	const show = (md: string) => {
+		const inline = (t: string) =>
+			t
+				.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!)
+				.replace(/`([^`]+)`/g, "<code>$1</code>")
+				.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+				.replace(/(^|\W)[*_](\S(?:.*?\S)?)[*_](?=\W|$)/g, "$1<em>$2</em>");
+		answer.innerHTML = md
+			.trim()
+			.split(/\n{2,}/)
+			.map((block) => {
+				const lines = block.split("\n");
+				if (lines.every((l) => /^\s*[-*•]\s+/.test(l))) return `<ul>${lines.map((l) => `<li>${inline(l.replace(/^\s*[-*•]\s+/, ""))}</li>`).join("")}</ul>`;
+				if (lines.every((l) => /^\s*\d+[.)]\s+/.test(l))) return `<ol>${lines.map((l) => `<li>${inline(l.replace(/^\s*\d+[.)]\s+/, ""))}</li>`).join("")}</ol>`;
+				return `<p>${lines.map((l) => inline(l.replace(/^#+\s+/, ""))).join("<br>")}</p>`;
+			})
+			.join("");
+	};
 
 	let running: { abort(): void } | undefined;
 	/** A question asked before the visitor's AI was connected: asked as soon as it is. */
@@ -99,12 +118,12 @@ const suggestions = ["What does Leuria do, in two sentences?", "Can a website se
 					// Models often open with blank lines (after reading the page, say): don't show them.
 					if (!text.trim()) continue;
 					answer.dataset.state = "answering";
-					answer.textContent = text.trimStart();
+					show(text);
 				}
 			}
 			const result = await run.result();
 			answer.dataset.state = "done";
-			answer.textContent = (result.text || text).trim();
+			show(result.text || text);
 		} catch (error) {
 			console.warn("[leuria.eu] ask:", error);
 			if (error instanceof NoProviderError) {
@@ -138,9 +157,7 @@ const suggestions = ["What does Leuria do, in two sentences?", "Can a website se
 		gap: var(--space-4);
 		padding: var(--space-5);
 		border-radius: var(--radius-5);
-		box-shadow:
-			var(--shadow-3),
-			0 0 0 1px var(--border);
+		background: var(--surface);
 	}
 	.try-head {
 		display: flex;
@@ -155,8 +172,24 @@ const suggestions = ["What does Leuria do, in two sentences?", "Can a website se
 		background: var(--surface-sunken);
 		font-size: 16px;
 		line-height: 24px;
-		white-space: pre-wrap;
-		box-shadow: inset 0 0 0 1px var(--border);
+	}
+	.answer :is(p, ul, ol) {
+		margin: 0;
+	}
+	.answer :is(p, ul, ol) + :is(p, ul, ol) {
+		margin-top: var(--space-3);
+	}
+	.answer :is(ul, ol) {
+		padding-left: 1.25em;
+	}
+	.answer li + li {
+		margin-top: var(--space-1);
+	}
+	.answer code {
+		font: 14px/1 var(--font-geist-mono, ui-monospace, monospace);
+		padding: 1px 5px;
+		border-radius: 4px;
+		background: var(--surface);
 	}
 	.answer[data-state="thinking"],
 	.answer[data-state="waiting"] {
@@ -165,7 +198,6 @@ const suggestions = ["What does Leuria do, in two sentences?", "Can a website se
 	.answer[data-state="problem"] {
 		background: var(--blocked-soft);
 		color: var(--blocked-text);
-		box-shadow: none;
 	}
 	.suggestions {
 		display: flex;
@@ -199,10 +231,9 @@ const suggestions = ["What does Leuria do, in two sentences?", "Can a website se
 		padding: 0 var(--space-4);
 		border: 0;
 		border-radius: var(--radius-full);
-		background: var(--surface);
+		background: var(--pearl-3);
 		color: var(--text);
 		font: inherit;
-		box-shadow: inset 0 0 0 1px var(--border-control);
 	}
 	.composer input:focus-visible {
 		outline: 2px solid var(--focus);
