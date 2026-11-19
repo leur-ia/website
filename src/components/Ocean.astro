@@ -125,7 +125,7 @@ const STAR = "M181 61 C184 74 191 82 206 86 C191 90 184 98 181 111 C178 98 171 9
 	function target(now: number, sy: number, progress: number) {
 		const wide = vw >= 900;
 		// At the top: big, beside the headline. Then it shrinks and wanders.
-		const hero = intro ? clamp(sy / (vh * 0.85)) : 1;
+		const hero = intro && vw >= 900 ? clamp(sy / (vh * 0.85)) : 1;
 		const heroX = wide ? vw * 0.77 : vw * 0.6;
 		const heroY = wide ? vh * 0.4 : vh * 0.2;
 		const heroS = wide ? Math.min(vw * 0.34, vh * 0.62, MANTA) : Math.min(vw * 0.66, vh * 0.3);
@@ -177,8 +177,10 @@ const STAR = "M181 61 C184 74 191 82 206 86 C191 90 184 98 181 111 C178 98 171 9
 		const bob = reduced ? 0 : Math.sin(now / 1400) * 6;
 		manta.style.transform = `translate3d(${(pos.x - MANTA / 2).toFixed(2)}px, ${(pos.y - MANTA / 2 + bob).toFixed(2)}px, 0) scale(${(pos.s / MANTA).toFixed(4)}) rotate(${pos.r.toFixed(2)}deg)`;
 		// On light ground it swims as a faint shadow behind the words; on dark ground, solid, lit by its star.
-		const swimming = intro ? clamp(sy / (vh * 0.85)) : 1;
-		write("opacity", Math.max(lerp(1, 0.16, swimming), clamp((dark - 0.2) / 0.5)).toFixed(3), (v) => (manta.style.opacity = v));
+		const swimming = intro && vw >= 900 ? clamp(sy / (vh * 0.85)) : 1;
+		// A phone has no margin to swim in: it stays a faint shadow there, whatever the ground.
+		const solid = vw >= 900 ? Math.max(lerp(1, 0.16, swimming), clamp((dark - 0.2) / 0.5)) : 0.12;
+		write("opacity", solid.toFixed(3), (v) => (manta.style.opacity = v));
 	}
 
 	// The manta's wake pushes the blocks it swims past; they ease back when it's gone.

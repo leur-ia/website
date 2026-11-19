@@ -1,0 +1,22 @@
+# Leuria
+
+> Leuria is a free, open-source desktop app for Mac and Windows that lets the websites you choose use the AI you already have: Claude, ChatGPT (Codex), Gemini, GitHub Copilot and other AI accounts, an API key (OpenAI, Mistral, Groq, OpenRouter…), or a free model on your own computer (LM Studio, Ollama, oMLX). Each site must ask first, in Leuria's own window, and no site can see your files, your password, your AI account or your other tabs.
+
+## For people
+
+- [Home](https://leuria.eu/): what Leuria does, how it works, privacy, which AIs it works with, FAQ
+- [Download](https://leuria.eu/download/): builds for Mac (Apple Silicon and Intel) and Windows (x64 and ARM), Homebrew, first-launch steps
+- [Privacy policy](https://leuria.eu/privacy-policy/): what the app sends, where, and what it keeps
+
+## For website owners
+
+- [Leuria for websites](https://leuria.eu/websites/): add AI features (assistant, answers from your docs, search by meaning) that run on your visitors' AI, with no AI bill and no server
+- [Developer docs](https://leuria.dev/): quickstart, the "Connect your AI" button, JavaScript and React libraries
+- [Live demos](https://demo.leuria.dev/): a shop, a notebook, a field guide, a help desk and a smart home running on the visitor's AI
+
+## Facts
+
+- Price: free. License: Apache 2.0. No Leuria account.
+- Systems: macOS and Windows. Linux is not available.
+- Limits: a connected site can ask at most 120 times an hour, 20 from a background tab; you can pause or disconnect any site.
+- Source: https://github.com/leur-ia/leuria

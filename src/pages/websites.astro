@@ -6,6 +6,8 @@
 import Icon from "../components/Icon.astro";
 import Ocean from "../components/Ocean.astro";
 import { DEVELOPERS_URL } from "../data/site";
+
+const QUICKSTART_URL = `${DEVELOPERS_URL}/docs/developers/quickstart`;
 import Base from "../layouts/Base.astro";
 
 const DEMOS_URL = "https://demo.leuria.dev/";
@@ -16,62 +18,72 @@ const demos = [
 	{ id: "notes", name: "Maren's notebook", claim: "A notebook you search by meaning, indexed in the visitor's browser.", shows: "Search by meaning · Related notes · Answers with sources", alt: "Maren's notebook: a list of notes and a search by meaning" },
 	{ id: "dex", name: "Hollowmark", claim: "A field guide to 48 creatures. Describe one to find it.", shows: "Search by meaning · Similar entries · Team builder", alt: "The Hollowmark field guide: a grid of creature entries" },
 	{ id: "bike", name: "Rayon Cycles", claim: "A help desk that follows the workshop's own guides.", shows: "Skills · Page tools · Bookings you confirm", alt: "Rayon Cycles: the workshop's services and its help desk" },
-	{ id: "home", name: "Hearth", claim: "A house read by a decision model, in one call.", shows: "Decisions · Decision trace · Chat only for words", alt: "Hearth: the house's devices by room, and the decision trace" },
+	{ id: "home", name: "Hearth", claim: "A smart home that turns plain words into actions.", shows: "Decisions · Decision trace · Chat only for words", alt: "Hearth: the house's devices by room, and the decision trace" },
+] as const;
+/** What a site owner asks before adding the button, answered in a line or two. */
+const faq = [
+	["What does it cost?", "Nothing. The libraries and the desktop app are free and open source, under the Apache 2.0 licence. Questions run on your visitor's AI."],
+	["What do my visitors agree to?", "Before anything runs, Leuria shows them what your site can and can't do. They can see what it asked today and pause it, and a site can ask at most 120 times an hour."],
+	["Does my data leave my page?", "Your tools run in your page. The visitor's AI only gets what your page sends with a question."],
+	["Do I need a backend?", "No. Every demo is static files. Add your own server only if you want a fallback for visitors without an AI."],
+	["Which frameworks does it work with?", "Plain JavaScript or React, and the button is a web component, so any framework that runs in a browser."],
 ] as const;
 ---
 
 <Base
-	title="Leuria for websites · AI features that run on your visitors' AI"
-	description="Add an assistant, answers from your docs or search by meaning to your website, without an AI bill. Your visitors bring the AI they already have, through Leuria."
+	title="Add a free AI assistant to your website · Leuria"
+	description="Add an AI assistant, answers from your docs or search by meaning to your site, with no AI bill and no server. Your visitors bring their own AI through Leuria."
 >
 	<Ocean intro={false} />
 
 	<!-- 1 · What a site gets, beside a real demo. -->
 	<section class="hero" aria-labelledby="hero-title" data-theme="light">
 		<div class="hero-text">
-			<h1 id="hero-title">AI features on your site, on your visitors' AI<span class="punct">.</span></h1>
+			<h1 id="hero-title">AI features. Zero AI bill<span class="punct">.</span></h1>
 			<p class="lede">
-				Your visitors already have an AI: an agent they sign in to, an API with their key, or a model on their computer. Leuria connects it to your
-				page. You add a button and a few lines of code; nobody pays for a new model, and your data never leaves your page.
+				Your visitors already have Claude, ChatGPT, Gemini or a model on their computer. Add one button and a few lines of code, and your site's
+				assistant runs on their AI. You pay nothing per question.
 			</p>
 			<div class="hero-actions">
-				<a class="btn btn-ink btn-lg" href={DEVELOPERS_URL}>Read the developer docs <Icon name="arrow-right" /></a>
+				<a class="btn btn-ink btn-lg" href={QUICKSTART_URL}>Add it to your site <Icon name="arrow-right" /></a>
 				<a class="btn btn-link" href={DEMOS_URL}>Try the demos</a>
 			</div>
 			<ul class="facts">
-				<li>No AI bill, no key to hide</li>
-				<li>Your tools run in your page</li>
+				<li>No API key to hide</li>
+				<li>Works on a static site</li>
 				<li>Every visitor says yes first</li>
 			</ul>
 		</div>
 		<figure class="hero-shot">
 			<img src="/demos/shop.jpg" width="1440" height="900" alt={demos[0].alt} fetchpriority="high" />
-			<figcaption>Kiln &amp; Co., a demo shop. Its assistant answers from the page's own stock, with the visitor's AI.</figcaption>
+			<figcaption>Kiln &amp; Co., a demo shop. Its assistant sells from the real stock, on the visitor's AI.</figcaption>
 		</figure>
 	</section>
 
 	<!-- 2 · What changes for the site, in plain words. -->
 	<section class="rules-section" aria-labelledby="rules-title" data-theme="dark">
 		<div class="rules-text">
-			<h2 id="rules-title">What changes for you<span class="punct">.</span></h2>
-			<p>The AI is your visitor's. The features, the tools and the data are yours, in your page, in your code.</p>
+			<h2 id="rules-title">Your visitor brings the AI<span class="punct">.</span></h2>
+			<p>Your features, tools and data stay in your page.</p>
 		</div>
 		<dl class="rules">
 			<div class="rule can">
 				<dt>You get</dt>
-				<dd>An assistant, answers from your docs, search by meaning, a form filled from a message.</dd>
-				<dd>Tools the AI calls in your page: search your catalogue, read your notes, book a slot.</dd>
+				<dd>An assistant that answers from your docs or your catalogue</dd>
+				<dd>Search by meaning, and forms filled in from one message</dd>
+				<dd>Tools the AI runs in your page: search, read, book</dd>
 			</div>
 			<div class="rule cant">
 				<dt>You don't need</dt>
-				<dd>An AI bill, or a key in your page or on your server.</dd>
-				<dd>A server at all: every demo below is static files.</dd>
+				<dd>An AI bill</dd>
+				<dd>An API key to hide</dd>
+				<dd>A server: every demo below is static files</dd>
 			</div>
 			<div class="rule">
-				<dt>Your visitor sees</dt>
-				<dd>Leuria's window, which says what your site can and can't do. Nothing runs until they say yes.</dd>
-				<dd>What your site asked of their AI today, in Leuria. A site is capped at 120 questions an hour, 20 from a background tab, and the visitor can pause it. Their AI is theirs to spend.</dd>
-				<dd>Without Leuria, the same feature can use the browser's built-in AI, or your own server.</dd>
+				<dt>Visitors without Leuria</dt>
+				<dd>Get Chrome's built-in AI, where their browser has it</dd>
+				<dd>Or your own server, if you add one</dd>
+				<dd>Or a link to install Leuria</dd>
 			</div>
 		</dl>
 	</section>
@@ -79,7 +91,7 @@ const demos = [
 	<!-- 3 · Five demos, as they look. -->
 	<section class="demos" aria-labelledby="demos-title" data-theme="light">
 		<div class="demos-head">
-			<h2 id="demos-title" class="two-tone"><span>Five sites</span> <br />that already do<span class="punct">.</span></h2>
+			<h2 id="demos-title" class="two-tone"><span>See it work.</span> <br />Five live demos<span class="punct">.</span></h2>
 			<a class="btn btn-quiet" href={DEMOS_URL}>All demos <Icon name="arrow-right" /></a>
 		</div>
 		<ul class="bands">
@@ -103,12 +115,11 @@ const demos = [
 	<!-- 4 · The code: the button, then a question with a tool. -->
 	<section class="code-section" aria-labelledby="code-title" data-theme="light">
 		<div class="code-text">
-			<h2 id="code-title">Add the button, then ask<span class="punct">.</span></h2>
+			<h2 id="code-title">One button. A few lines<span class="punct">.</span></h2>
 			<p>
-				“Connect your AI” handles the rest: finding Leuria, asking the visitor, and offering another AI when they don't have it. Plain JavaScript,
-				React, or any framework.
+				The “Connect your AI” button finds Leuria, asks the visitor, and falls back to another AI when they don't have it. Works with any framework.
 			</p>
-			<a class="btn btn-link" href={DEVELOPERS_URL}>Start with the quickstart <Icon name="arrow-right" /></a>
+			<a class="btn btn-link" href={QUICKSTART_URL}>Start with the quickstart <Icon name="arrow-right" /></a>
 		</div>
 		<figure class="code">
 			<figcaption>shop.js</figcaption>
@@ -125,11 +136,26 @@ setDefaultClient(ai)   <span class="c">// &lt;leuria-connect-button&gt; uses it<
 		</figure>
 	</section>
 
-	<!-- 5 · The licence, in one line. -->
+	<!-- 5 · The objections, answered. -->
+	<section class="faq" aria-labelledby="faq-title" data-theme="light">
+		<h2 id="faq-title">Questions<span class="punct">.</span></h2>
+		<div class="faq-list">
+			{
+				faq.map(([q, a]) => (
+					<details>
+						<summary>{q}</summary>
+						<p>{a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- 6 · The licence, in one line. -->
 	<section class="close" aria-labelledby="close-title" data-theme="light">
 		<h2 id="close-title">Open source, from the button to the app<span class="punct">.</span></h2>
 		<p>The libraries and the desktop app, under the Apache 2.0 licence.</p>
-		<a class="btn btn-ink btn-lg" href={DEVELOPERS_URL}>Go to leuria.dev <Icon name="arrow-right" /></a>
+		<a class="btn btn-ink btn-lg" href={QUICKSTART_URL}>Read the quickstart <Icon name="arrow-right" /></a>
 	</section>
 </Base>
 
@@ -454,6 +480,7 @@ setDefaultClient(ai)   <span class="c">// &lt;leuria-connect-button&gt; uses it<
 		.band-right { text-align: left; max-width: none; }
 		.code-section { grid-template-columns: 1fr; padding-top: 64px; padding-bottom: 64px; }
 		pre { font-size: 12px; }
+		.code-section > * { min-width: 0; }
 		.close { padding-top: 64px; }
 	}
 </style>

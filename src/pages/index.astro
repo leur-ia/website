@@ -8,35 +8,44 @@ import Base from "../layouts/Base.astro";
 
 /**
  * The argument, one claim per section, each with its proof:
- *   1. Use the AI you already have on the websites you choose. → the real shop, on your AI, in sixteen seconds
- *   2. Set up once, then it's one click per site.         → the Leuria window, four times along
- *   3. Every site asks first; none sees your files.        → what a site can and can't do, in words
- *   4. It works with the AI you have.                      → the AIs, by kind
- *   5. This page runs on your AI: ask it.                  → the live question box
- *   6. It's free. Get it.                                  → the download
+ *   1. Bring your own AI to the web.        → the real shop, on your AI, in sixteen seconds
+ *   2. Set up once, then one click a site.  → the Leuria window, four times along
+ *   3. You're in charge.                    → what a site can and can't do, in words
+ *   4. Works with the AI you use.           → the AIs, by kind
+ *   5. Try it right here.                   → the live question box
+ *   6. Questions people ask first.          → the objections, answered
+ *   7. Free. Get it.                        → the download
  */
 
 /** The clips the first screen cycles through: real sites on a real AI, recorded as is. */
 const clips = [
-	{ id: "shop", caption: "A shop: its assistant answers from the shop's own stock, and fills an order from a message.", alt: "Kiln & Co., a demo shop, connecting to the visitor's AI through Leuria, answering which mug is cheapest, and filling an order from a message" },
-	{ id: "docs", caption: "A documentation site: Ask AI answers from the docs, with links to the pages it used.", alt: "A Docusaurus documentation site with Ask AI: a question answered from the docs, with links to the pages" },
-	{ id: "home", caption: "A smart home: a decision model on your computer reads each command; your AI only speaks when words are needed.", alt: "Hearth, a smart home demo: a command read by a decision model on the visitor's computer, with its trace" },
+	{ id: "shop", caption: "A shop that answers from its real stock and fills in your order.", alt: "Kiln & Co., a demo shop, connecting to the visitor's AI through Leuria, answering which mug is cheapest, and filling an order from a message" },
+	{ id: "docs", caption: "Docs that answer with links to the right pages.", alt: "A Docusaurus documentation site with Ask AI: a question answered from the docs, with links to the pages" },
+	{ id: "home", caption: "A smart home that runs on a model on your computer.", alt: "Hearth, a smart home demo: a command read by a decision model on the visitor's computer, with its trace" },
 ];
 
 /** The four steps, each with what you actually see at that moment. */
-const clauses = ["First, get Leuria.", "Then pick your AI.", "Then a site asks.", "Then it answers, from your AI."];
+const clauses = ["Install Leuria.", "Pick your AI.", "Say yes to a site.", "Get answers from your AI."];
 
 /** The AIs Leuria works with, by kind. */
 const kinds = [
-	{ id: "app", tab: "An agent you sign in to", short: "Sign in", items: [["Claude Code", "with your Claude account"], ["Codex", "with your OpenAI account"], ["Gemini CLI", "with your Google account"], ["GitHub Copilot, Cursor, Pi…", "and forty more coding agents"]] },
-	{ id: "local", tab: "On this computer", short: "Free", items: [["LM Studio", "any chat model you loaded"], ["Ollama", "any chat or decision model"], ["oMLX", "MLX models on Apple Silicon"], ["Your browser's AI", "Chrome's built-in model, without Leuria"]] },
-	{ id: "key", tab: "With a key", short: "Your key", items: [["Any OpenAI-compatible API", "OpenAI, Mistral, Groq, OpenRouter…"], ["Your company's AI", "its own address, your key"], ["oMLX", "your Mac's models, served locally"], ["TypeSafe", "a decision model, for sites that decide"]] },
+	{ id: "app", tab: "Your AI account", short: "Sign in", items: [["Claude Code", "With your Claude account"], ["Codex", "With your ChatGPT account"], ["Gemini CLI", "With your Google account"], ["GitHub Copilot, Cursor and more", "Over forty AI assistants you already use"]] },
+	{ id: "local", tab: "On your computer", short: "Free, private", items: [["LM Studio", "Any model you downloaded"], ["Ollama", "Any model you downloaded"], ["oMLX", "Fast models on Apple Silicon Macs"], ["Your browser's AI", "Chrome's built-in model, even without Leuria"]] },
+	{ id: "key", tab: "With a key", short: "Pay as you go", items: [["OpenAI, Mistral, Groq, OpenRouter…", "Paste your key once, in Leuria"], ["Your company's AI", "Its address and your key"], ["oMLX", "Your Mac's models, served locally"], ["TypeSafe", "A decision model, for sites that make choices"]] },
+] as const;
+/** The questions people ask before they download, answered in a line or two. */
+const faq = [
+	["Is it free?", "Yes, and open source. Leuria costs nothing; you bring the AI you already have."],
+	["Do I need a paid AI?", "No. LM Studio and Ollama run free models on your computer, and Leuria connects them. Your questions never leave your machine."],
+	["What can a website see?", "Only the questions it asks your AI and the answers. Your files, your AI account and your other tabs stay out of reach."],
+	["Which websites work with it?", "Any site with a “Connect your AI” button. Start with the demos. Want it on a site you use? Send them to leuria.eu/websites."],
+	["Does it work on my phone?", "Leuria runs on Mac and Windows. Install it there and connect from that computer's browser."],
 ] as const;
 ---
 
 <Base
-	title="Leuria · Use the AI you already have, on the websites you choose"
-	description="A free, open-source app that connects the AI you already have (Claude Code, Codex, an API key, or a local model) to the websites you choose. Every site asks first; none sees your files."
+	title="Leuria · Use Claude, ChatGPT or a local AI on websites"
+	description="Bring your own intelligence. With Leuria, the websites you choose answer with your Claude, ChatGPT, Gemini or a sovereign model on your computer. Free."
 	jsonLd={SITE_JSON_LD}
 >
 	<!-- The manta swims behind the page, faintly; its star lights up over the dark section. -->
@@ -45,38 +54,35 @@ const kinds = [
 	<!-- 1 · What Leuria is, in plain words, beside the real clip of it working. -->
 	<section class="hero" aria-labelledby="hero-title" data-theme="light">
 		<div class="hero-text">
-			<h1 id="hero-title">Use the AI you already have, on the websites you choose<span class="punct">.</span></h1>
+			<h1 id="hero-title">Bring your own intelligence<span class="punct">.</span></h1>
 			<p class="lede">
-				Leuria is a small, free app on your computer. It connects the AI you already have to the websites that ask for it: an agent you sign in to (Claude Code,
-				Codex, Gemini CLI and others), any OpenAI-compatible API with your key, or a model running on your machine. Each site asks first, you
-				say yes once, and none of them ever sees your files.
+				A website's chatbot runs on whatever model the site pays for. With Leuria, it answers with yours: Claude, ChatGPT, Gemini, or a sovereign
+				model running on your own computer. You pick the sites. They never see your files.
 			</p>
 			<div class="hero-actions">
 				<DownloadButton more />
 				<a class="btn btn-link" href="#how">See how it works</a>
 			</div>
 			<ul class="facts">
-				<li>Every site asks first</li>
-				<li>No site sees your files</li>
 				<li>Free and open source</li>
+				<li>You approve every site</li>
+				<li>Runs on your computer</li>
 			</ul>
 		</div>
 		<figure class="hero-clip" data-reel data-captions={JSON.stringify(clips.map((c) => c.caption))}>
-			<!-- Three scenes, sixteen to nineteen seconds each, one after the other; a desktop window on wide screens, a phone-sized one on small ones. -->
+			<!-- Three scenes, sixteen to nineteen seconds each, one after the other, on wide screens. A phone gets the one short shop clip instead. -->
 			<div class="reel-stage">
 				{
 					clips.map((clip, i) => (
-						<>
-							<video class:list={["clip", "clip-desktop", { on: i === 0 }]} data-scene={i} muted playsinline autoplay={i === 0} preload={i === 0 ? "auto" : "none"} poster={`/video/leuria-${clip.id}-desktop.jpg`} width="1440" height="900" aria-label={clip.alt}>
-								<source src={`/video/leuria-${clip.id}-desktop.mp4`} type="video/mp4" />
-							</video>
-							<video class:list={["clip", "clip-mobile", { on: i === 0 }]} data-scene={i} muted playsinline preload="none" poster={`/video/leuria-${clip.id}-mobile.jpg`} width="860" height="1864" aria-label={`${clip.alt}, on a phone-sized window`}>
-								<source src={`/video/leuria-${clip.id}-mobile.mp4`} type="video/mp4" />
-							</video>
-						</>
+						<video class:list={["clip", { on: i === 0 }]} data-scene={i} muted playsinline preload="none" poster={`/video/leuria-${clip.id}-desktop.jpg`} width="1440" height="900" aria-label={clip.alt}>
+							<source src={`/video/leuria-${clip.id}-desktop.mp4`} type="video/mp4" />
+						</video>
 					))
 				}
 			</div>
+			<video class="phone-clip" data-phone-clip muted loop playsinline preload="none" poster="/video/leuria-demo.jpg" width="720" height="1440" aria-label="A shop answering which mug is cheapest and filling in an order from a message, with the visitor's own AI">
+				<source src="/video/leuria-demo.mp4" type="video/mp4" />
+			</video>
 			<figcaption>
 				<span data-caption>{clips[0]!.caption}</span>
 				<span class="reel-dots" role="tablist" aria-label="Scenes">
@@ -87,12 +93,12 @@ const kinds = [
 	</section>
 
 	<!-- 2 · Four fields: what you see at each step, as it really looks (the menu bar, the app, its window, the site). -->
-	<section class="fields" aria-labelledby="fields-title" data-theme="light">
+	<section class="fields" id="how" aria-labelledby="fields-title" data-theme="light">
 		<div class="field f1 reveal">
-			<h2 id="fields-title" class="fields-title">Set up once<span class="punct">.</span></h2>
+			<h2 id="fields-title" class="fields-title">One app. One click per site<span class="punct">.</span></h2>
 			<div class="shot get-step">
 				<DownloadButton more />
-				<p>A small app. It waits in your menu bar until a site needs it.</p>
+				<p>It waits in the background until a site asks for your AI.</p>
 			</div>
 			<p class="clause">{clauses[0]}</p>
 		</div>
@@ -113,34 +119,35 @@ const kinds = [
 	<!-- 3 · Privacy, in plain words: what a connected site can and can't do, and where you see them all. -->
 	<section class="privacy" id="privacy" aria-labelledby="privacy-title" data-theme="dark">
 		<div class="privacy-text">
-			<h2 id="privacy-title">Every site asks first<span class="punct">.</span></h2>
-			<p>A website can't use your AI until you say yes, in Leuria's own window. The window says what it may do, and what it may not.</p>
+			<h2 id="privacy-title">Your AI stays yours<span class="punct">.</span></h2>
+			<p>Every site asks first, in Leuria's window. None can ask more than 120 questions an hour.</p>
 		</div>
 		<dl class="rules">
 			<div class="rule can">
-				<dt>A site you allow can</dt>
-				<dd>Ask your AI to answer you.</dd>
-				<dd>Let your AI use that site's own features: search its products, read its notes.</dd>
+				<dt>A site can</dt>
+				<dd>Ask your AI questions</dd>
+				<dd>Search its own pages</dd>
+				<dd>Only once you say yes</dd>
 			</div>
 			<div class="rule cant">
 				<dt>It can't</dt>
-				<dd>See your files, or run programs on your computer.</dd>
-				<dd>See your password or your AI account.</dd>
-				<dd>See what you do on other websites.</dd>
+				<dd>See your files</dd>
+				<dd>See your AI account</dd>
+				<dd>See your other tabs</dd>
 			</div>
-			<div class="rule">
-				<dt>And you</dt>
-				<dd>See every connected site in Leuria, with the AI that answers it, and disconnect any of them in one click.</dd>
-				<dd>See what each site asked of your AI today, and pause any site that asks too much. No site can ask more than 120 times an hour, or 20 times from a tab you are not looking at.</dd>
-				<dd>With a model on your computer, nothing leaves it at all.</dd>
+			<div class="rule you">
+				<dt>You can</dt>
+				<dd>Disconnect it in one click</dd>
+				<dd>Pause it any time</dd>
+				<dd>Keep everything local</dd>
 			</div>
 		</dl>
 	</section>
 
 	<!-- 5 · The AI you have, by kind: tabs and bands. -->
-	<section class="ais" aria-labelledby="ais-title" id="how" data-theme="light">
+	<section class="ais" aria-labelledby="ais-title" data-theme="light">
 		<div class="ais-head">
-			<h2 id="ais-title" class="two-tone"><span>Works with</span> <br />the AI you have<span class="punct">.</span></h2>
+			<h2 id="ais-title" class="two-tone"><span>Works with</span> <br />the AI you already use<span class="punct">.</span></h2>
 			<DownloadButton />
 		</div>
 		<div class="ais-body" data-kinds>
@@ -164,7 +171,6 @@ const kinds = [
 									<span class="band-title">{name}</span>
 									<span class="band-note">{note}</span>
 								</span>
-								<span class="band-right">Chat · tools</span>
 							</li>
 						))}
 					</ul>
@@ -176,17 +182,32 @@ const kinds = [
 	<!-- 5 · The live thing: this page runs on your AI. -->
 	<section class="try" aria-labelledby="try-title" data-theme="light">
 		<div class="try-text">
-			<h2 id="try-title">This page runs <br />on your AI<span class="punct">.</span></h2>
-			<p>Already have Leuria? Connect it, then ask anything about Leuria. Your AI reads this page to answer, and nothing else.</p>
+			<h2 id="try-title">Ask this page<span class="punct">.</span></h2>
+			<p>Connect Leuria, or use your browser's built-in AI, and ask anything. Your AI answers from this page.</p>
 		</div>
 		<div class="try-box" data-ui><TryIt /></div>
 	</section>
 
-	<!-- 6 · A sentence with a blank: the download. -->
+	<!-- 6 · The objections, answered: native disclosure, no script. -->
+	<section class="faq" aria-labelledby="faq-title" data-theme="light">
+		<h2 id="faq-title">Questions<span class="punct">.</span></h2>
+		<div class="faq-list">
+			{
+				faq.map(([q, a]) => (
+					<details>
+						<summary>{q}</summary>
+						<p>{a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- 7 · A sentence with a blank: the download. -->
 	<section class="get" aria-labelledby="get-title" data-theme="light">
 		<!-- A div, not a p: the menu is a list, which a paragraph may not hold. -->
 		<div class="get-line" id="get-title">
-			Yours, free, for
+			Free for
 			<span class="get-system" data-system data-value="mac">
 				<button type="button" class="get-word" aria-haspopup="listbox" aria-expanded="false" aria-label="Your system: Mac" data-word-button>
 					<span class="word-roll" data-word>Mac</span>
@@ -200,7 +221,7 @@ const kinds = [
 			</span>
 			<a class="get-go" href="/download" data-go data-downloads={JSON.stringify(downloads)}>Download</a>
 		</div>
-		<p class="get-note" data-note>A small app that waits in the background until a site needs it. Other systems and versions on the download page.</p>
+		<p class="get-note" data-note>Open source. Other systems on the download page.</p>
 	</section>
 </Base>
 
@@ -245,8 +266,16 @@ const kinds = [
 		});
 	}
 	for (const dot of dots) dot.addEventListener("click", () => show(Number(dot.dataset.dot)));
-	show(0);
-	matchMedia("(max-width: 860px)").addEventListener("change", () => show(scene));
+	// A phone plays the one short shop clip instead; each loads only where it shows.
+	const phoneClip = document.querySelector<HTMLVideoElement>("[data-phone-clip]")!;
+	const phone = matchMedia("(max-width: 860px)");
+	const fit = () => {
+		if (phone.matches && !still) phoneClip.play().catch(() => undefined);
+		else phoneClip.pause();
+		show(scene);
+	};
+	phone.addEventListener("change", fit);
+	fit();
 	// A tab opened in the background loads no media until it is looked at: start again then.
 	document.addEventListener("visibilitychange", () => {
 		if (document.visibilityState === "visible") show(scene);
@@ -281,7 +310,7 @@ const kinds = [
 		wordButton.setAttribute("aria-label", `Your system: ${build?.name ?? value}`);
 		for (const o of options) o.setAttribute("aria-selected", String(o.dataset.option === value));
 		note.textContent = build?.url
-			? "A small app that waits in the background until a site needs it. Other systems and versions on the download page."
+			? "Open source. Other systems on the download page."
 			: `Not built for ${build?.name ?? value} yet: the download page says when. Mac and Windows are ready.`;
 	};
 	const choose = async (value: Platform) => {
@@ -461,7 +490,7 @@ const kinds = [
 		position: relative;
 		z-index: 1;
 	}
-	.clip-mobile {
+	.phone-clip {
 		display: none;
 	}
 	.hero-clip figcaption {
@@ -638,6 +667,10 @@ const kinds = [
 	.rule.cant dd::before {
 		background: #ff6a4f;
 	}
+	/* Your controls, apart from the site's permissions. */
+	.rule.you dd::before {
+		background: #b8acfe;
+	}
 	.rule.cant dd::before,
 	.rule.can dd::before {
 		border-radius: 50%;
@@ -667,7 +700,9 @@ const kinds = [
 	}
 	.tab {
 		width: 150px;
-		height: 64px;
+		min-height: 64px;
+		font: inherit;
+		color: inherit;
 		padding: 0 14px;
 		border: 0;
 		border-radius: 0;
@@ -763,7 +798,7 @@ const kinds = [
 		font-size: 18px;
 	}
 
-	/* ---------- 6 · A sentence with a blank ---------- */
+	/* ---------- 7 · A sentence with a blank ---------- */
 	.get {
 		padding: clamp(96px, 14vh, 200px) var(--margin) clamp(48px, 8vh, 96px);
 	}
@@ -905,22 +940,25 @@ const kinds = [
 		.hero { grid-template-columns: 1fr; row-gap: 32px; min-height: 0; padding: 24px 16px 40px; }
 		.hero h1 { font-size: 9vw; max-width: none; }
 		.lede { font-size: 17px; }
-		.clip-desktop { display: none; }
-		.clip-mobile { display: block; }
-		.reel-stage { width: min(100%, 360px); margin: 0 auto; }
+		.reel-stage, .reel-dots { display: none; }
+		.phone-clip { display: block; width: min(100%, 300px); height: auto; margin: 0 auto; border-radius: 14px; background: var(--pearl-3); }
 		.fields { grid-template-columns: 1fr; }
-		.field { min-height: 64svh; padding: 20px; }
-		.fields-title { font-size: 24px; margin-bottom: 12px; }
-		.clause { order: -1; margin: 0 0 32px; font-size: 24px; }
+		.field { min-height: 0; padding: 40px 20px; gap: 24px; }
+		.fields-title { order: -2; font-size: 32px; margin: 0 0 8px; }
+		.clause { order: -1; margin: 0; font-size: 22px; max-width: none; }
 		.shot { position: static; transform: none; margin: 0 auto; max-width: 100%; }
+		.get-step { margin: 0; }
 		.privacy { grid-template-columns: 1fr; padding: 64px 16px; }
 		.rules { grid-template-columns: 1fr; }
 		.ais { padding: 64px 16px; }
 		.ais-body { grid-template-columns: 1fr; row-gap: 16px; margin-top: 32px; }
 		.tabs { flex-direction: row; position: sticky; top: 0; z-index: 2; background: var(--bg); padding: 8px 0; }
-		.tab { flex: 1; width: auto; height: 56px; }
+		.tabs { gap: 4px; }
+		.tab { flex: 1; width: auto; min-height: 60px; padding: 8px 10px; }
+		.tab-name { font-size: 14px; line-height: 1.2; }
+		.tab-note { font-size: 12px; }
 		.band { grid-template-columns: 1fr; height: auto; padding: 16px; row-gap: 4px; }
-		.band-tag { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+		.band-tag { display: none; }
 		.try { grid-template-columns: 1fr; padding: 64px 16px; }
 		.get { padding: 64px 16px 48px; }
 		.get-line { font-size: 10vw; }

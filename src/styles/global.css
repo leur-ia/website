@@ -196,6 +196,51 @@ p {
 }
 
 
+/* Questions and answers: native disclosure, shared by the home and websites pages. */
+.faq {
+	display: grid;
+	grid-template-columns: 5fr 7fr;
+	gap: 40px;
+	padding: clamp(96px, 12vh, 180px) var(--margin) 0;
+}
+.faq-list details {
+	border-bottom: 1px solid var(--border);
+}
+.faq-list summary {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 20px 0;
+	font-size: 19px;
+	font-weight: 600;
+	cursor: pointer;
+	list-style: none;
+}
+.faq-list summary::-webkit-details-marker {
+	display: none;
+}
+.faq-list summary::after {
+	content: "+";
+	font-weight: 400;
+	color: var(--text-muted);
+	transition: transform 200ms var(--ease-out);
+}
+.faq-list details[open] summary::after {
+	transform: rotate(45deg);
+}
+.faq-list p {
+	padding-bottom: 20px;
+	max-width: 60ch;
+	color: var(--text-muted);
+	font-size: 17px;
+	line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+	.faq { grid-template-columns: 1fr; gap: 16px; padding: 64px 16px 0; }
+	.faq-list summary { font-size: 17px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
 	html {
 		scroll-behavior: auto;
